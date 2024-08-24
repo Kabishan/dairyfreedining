@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">DairyFreeDining</string>
+
+    <!-- Navigation -->
+    <string name="navigate_back">Navigate Back</string>
+
+    <!-- Search Bar -->
+    <string name="search_bar_leading">Search</string>
+    <string name="search_bar_trailing">Clear</string>
+
+    <!-- Landing Screen -->
+    <string name="landing_search_bar_placeholder">Search restaurants…</string>
+    <string name="no_restaurants_found">No Restaurants Found</string>
+
+    <!-- Details Screen -->
+    <string name="details_search_bar_placeholder">Search foods…</string>
+
+    <!-- Submission Screen -->
+    <string name="submission_screen">Submission</string>
+    <string name="submission_screen_description">If you discover a dairy-free food item at a restaurant that you frequent, please submit this item. Upon our review, we\'ll update our listings with this item.</string>
+    <string name="submission_screen_restaurant_label">Restaurant</string>
+    <string name="submission_screen_category_label">Category</string>
+    <string name="submission_screen_food_label">Food</string>
+    <string name="submission_screen_button_label">Submit Food</string>
+    <string name="submission_screen_error_empty_fields">Please make sure no fields are empty</string>
+    <string name="submission_screen_error_network">Something went wrong…</string>
+    <string name="submission_screen_success">Submitted</string>
+
+    <!-- Loading Screen -->
+    <string name="loading_screen_content">Loading…</string>
+
+    <!-- Error Screen -->
+    <string name="error_screen_content">Something went wrong…</string>
+    <string name="error_screen_button_content">Try Again</string>
+
+    <!-- About Screen -->
+    <string name="about_screen">About</string>
+    <string name="about_me_header">About Me</string>
+    <string name="about_me_paragraph_1">About Me Content</string>
+    <string name="credits_header">Credits</string>
+    <string name="credits_content_paragraph_1">Credits content</string>
+    <string name="disclaimer_header">Disclaimer</string>
+    <string name="disclaimer_content_paragraph_1">When utilizing this information, please note that cross-contamination of milk and other allergens is a big issue in fast food restaurants and should always be considered a risk with any foods being served in a restaurant environment. These listings are for informational purposes only, and should not be relied upon exclusively. Ingredients, menu items, and processes do change often, and without our knowledge. We will update this list as we obtain new information, however, it may not be feasible to record all changes in a timely fashion. Wherever there is possible concern, always ask for product information from the restaurant and check on preparation processes prior to consumption.</string>
+    <string name="disclaimer_content_paragraph_2">If you have a severe or life-threatening food allergy to milk or another allergen, consult a physician. Discuss with them the level of precaution you should take at restaurants.</string>
+    <string name="disclaimer_content_paragraph_3">This information was obtained from the restaurant chain websites, customer service, or other printed data. We have listed the foods that were identified by the respective fast food chains as not containing milk ingredients, and wherever possible, those that have also been noted as high risk for cross-contamination. However, as a third-party reporter, we do not and cannot guarantee their accuracy.</string>
+</resources>
