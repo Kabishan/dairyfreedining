@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun FoodListItem(
@@ -27,4 +28,10 @@ fun FoodListItem(
         )
     }
     HorizontalDivider()
+}
+
+@Preview
+@Composable
+private fun FoodListItemPreview() {
+    FoodListItem(foodItem = "Burger")
 }

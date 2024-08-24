@@ -77,7 +77,7 @@ fun LandingScreen(
 }
 
 @Composable
-fun LandingScreenContent(
+private fun LandingScreenContent(
     innerPadding: PaddingValues,
     landingState: LandingState,
     getRestaurants: () -> Unit,
@@ -102,7 +102,7 @@ fun LandingScreenContent(
 }
 
 @Composable
-fun RestaurantsList(
+private fun RestaurantsList(
     restaurants: List<Restaurant>,
     navigateToDetails: (String, String) -> Unit,
     navigateToSubmission: () -> Unit,

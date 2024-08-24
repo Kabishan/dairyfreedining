@@ -61,7 +61,7 @@ fun DetailsScreen(
 }
 
 @Composable
-fun DetailsScreenContent(
+private fun DetailsScreenContent(
     innerPadding: PaddingValues,
     detailsState: DetailsState,
     getRestaurantDetails: () -> Unit
@@ -80,7 +80,7 @@ fun DetailsScreenContent(
 }
 
 @Composable
-fun DetailsScreen(categories: Map<String, List<String>>) {
+private fun DetailsScreen(categories: Map<String, List<String>>) {
     val searchQuery: MutableState<String> = remember { mutableStateOf(String()) }
     val categoriesMap: MutableState<Map<String, List<String>>> =
         remember { mutableStateOf(categories) }

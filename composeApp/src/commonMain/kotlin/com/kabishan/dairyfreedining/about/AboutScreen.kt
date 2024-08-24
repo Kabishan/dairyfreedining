@@ -48,7 +48,7 @@ fun AboutScreen(navController: NavController) {
 }
 
 @Composable
-fun AboutScreenContent(innerPadding: PaddingValues) {
+private fun AboutScreenContent(innerPadding: PaddingValues) {
     val scrollState = rememberScrollState()
 
     Column(

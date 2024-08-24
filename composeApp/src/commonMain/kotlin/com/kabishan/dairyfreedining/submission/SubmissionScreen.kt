@@ -65,7 +65,7 @@ fun SubmissionScreen(
 }
 
 @Composable
-fun SubmissionScreenContent(
+private fun SubmissionScreenContent(
     innerPadding: PaddingValues,
     submissionState: SubmissionState,
     resetSubmissionState: () -> Unit,
