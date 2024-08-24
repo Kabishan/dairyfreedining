@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -45,16 +47,20 @@ fun SubmissionScreen(
         )
     )
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Scaffold(
         topBar = {
             TopBar(
                 title = stringResource(resource = Res.string.submission_screen),
                 navController = navController
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         SubmissionScreenContent(
             innerPadding = innerPadding,
+            snackbarHostState = snackbarHostState,
             submissionState = viewModel.submissionState.value,
             resetSubmissionState = viewModel::resetSubmissionState,
             submissionTextFieldState = viewModel.submissionTextFieldState.value,
@@ -67,6 +73,7 @@ fun SubmissionScreen(
 @Composable
 private fun SubmissionScreenContent(
     innerPadding: PaddingValues,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
     submissionState: SubmissionState,
     resetSubmissionState: () -> Unit,
     submissionTextFieldState: SubmissionTextFieldState,
@@ -86,13 +93,13 @@ private fun SubmissionScreenContent(
             when (submissionState) {
                 is SubmissionState.ShowError -> {
                     showProgressBar.value = false
-                    println(getString(submissionState.message))
+                    snackbarHostState.showSnackbar(getString(submissionState.message))
                 }
 
                 SubmissionState.ShowSuccess -> {
                     showProgressBar.value = false
                     focusManager.clearFocus()
-                    println(getString(Res.string.submission_screen_success))
+                    snackbarHostState.showSnackbar(getString(Res.string.submission_screen_success))
                 }
 
                 SubmissionState.ShowLoading -> showProgressBar.value = true
