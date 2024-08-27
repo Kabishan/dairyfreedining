@@ -1,5 +1,6 @@
 package com.kabishan.dairyfreedining.landing
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -130,12 +131,16 @@ private fun RestaurantsList(
             )
 
             if (restaurantList.value.isNotEmpty()) {
-                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    contentPadding = PaddingValues(2.dp)
+                ) {
                     items(restaurantList.value) {
                         RestaurantTile(
                             text = it.name,
                             imageUrl = it.imageUrl,
-                            modifier = Modifier.padding(2.dp),
                             onClick = { navigateToDetails(it.id, it.name) }
                         )
                     }
