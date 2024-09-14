@@ -21,6 +21,7 @@ import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.about_me_header
 import dairyfreedining.composeapp.generated.resources.about_me_paragraph_1
+import dairyfreedining.composeapp.generated.resources.about_me_paragraph_2
 import dairyfreedining.composeapp.generated.resources.about_screen
 import dairyfreedining.composeapp.generated.resources.credits_content_paragraph_1
 import dairyfreedining.composeapp.generated.resources.credits_header
@@ -63,7 +64,17 @@ private fun AboutScreenContent(innerPadding: PaddingValues) {
         Text(
             stringResource(resource = Res.string.about_me_paragraph_1),
             style = DairyFreeDiningTheme.typography.labelLarge,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .padding(top = 8.dp)
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        Text(
+            stringResource(resource = Res.string.about_me_paragraph_2),
+            style = DairyFreeDiningTheme.typography.labelLarge,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .padding(bottom = 8.dp)
         )
 
         CategoryHeader(
