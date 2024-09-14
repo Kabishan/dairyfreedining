@@ -17,7 +17,7 @@
 
     <!-- Submission Screen -->
     <string name="submission_screen">Submission</string>
-    <string name="submission_screen_description">If you discover a dairy-free food item at a restaurant that you frequent, please submit this item. Upon our review, we\'ll update our listings with this item.</string>
+    <string name="submission_screen_description">If you discover a dairy-free food item at a restaurant that you frequent, please submit this item. Upon our review, we'll update our listings with this item.</string>
     <string name="submission_screen_restaurant_label">Restaurant</string>
     <string name="submission_screen_category_label">Category</string>
     <string name="submission_screen_food_label">Food</string>
