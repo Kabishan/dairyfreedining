@@ -14,6 +14,7 @@
 
     <!-- Details Screen -->
     <string name="details_search_bar_placeholder">Search foods…</string>
+    <string name="no_food_items_found">No Food Items Found</string>
 
     <!-- Submission Screen -->
     <string name="submission_screen">Submission</string>

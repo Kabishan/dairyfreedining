@@ -1,5 +1,6 @@
 package com.kabishan.dairyfreedining.details
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,10 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,6 +29,7 @@ import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.details_search_bar_placeholder
+import dairyfreedining.composeapp.generated.resources.no_food_items_found
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -103,23 +107,32 @@ private fun DetailsScreen(categories: Map<String, List<String>>) {
         placeholderText = stringResource(resource = Res.string.details_search_bar_placeholder)
     )
 
-    LazyColumn {
-        categoriesMap.value.forEach { category ->
-            if (category.value.isNotEmpty()) {
-                item {
-                    CategoryHeader(
-                        text = category.key,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                    )
-                }
+    if (categoriesMap.value.values.flatten().isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Text(text = stringResource(Res.string.no_food_items_found))
+        }
+    } else {
+        LazyColumn {
+            categoriesMap.value.forEach { category ->
+                if (category.value.isNotEmpty()) {
+                    item {
+                        CategoryHeader(
+                            text = category.key,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp)
+                        )
+                    }
 
-                items(category.value) { foodItem ->
-                    FoodListItem(
-                        foodItem = foodItem,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    items(category.value) { foodItem ->
+                        FoodListItem(
+                            foodItem = foodItem,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
