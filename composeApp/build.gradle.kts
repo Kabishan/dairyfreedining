@@ -2,6 +2,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -74,6 +75,15 @@ android {
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
+    signingConfigs {
+        create("release") {
+            keyAlias = gradleLocalProperties(rootDir, providers).getProperty("key_alias")
+            keyPassword = gradleLocalProperties(rootDir, providers).getProperty("key_password")
+            storeFile = file(gradleLocalProperties(rootDir, providers).getProperty("store_file"))
+            storePassword = gradleLocalProperties(rootDir, providers).getProperty("store_password")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.kabishan.dairyfreedining"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -94,8 +104,7 @@ android {
             proguardFiles(
                 "proguard-rules.pro"
             )
-
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
