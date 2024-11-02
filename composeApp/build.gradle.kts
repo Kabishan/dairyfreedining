@@ -1,3 +1,5 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -7,6 +9,8 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.0"
+
+    id("com.codingfeline.buildkonfig") version "0.15.2"
 
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -32,7 +36,6 @@ kotlin {
     }
     
     sourceSets {
-        
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -107,3 +110,10 @@ android {
     }
 }
 
+buildkonfig {
+    packageName = "com.kabishan.dairyfreedining"
+
+    defaultConfigs {
+        buildConfigField(STRING, "BASE_URL", "https://dairyfreedining.koyeb.app/")
+    }
+}

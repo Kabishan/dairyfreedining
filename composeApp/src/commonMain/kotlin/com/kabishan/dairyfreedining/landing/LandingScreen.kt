@@ -146,7 +146,12 @@ private fun RestaurantsList(
                     }
                 }
             } else {
-                Text(text = stringResource(Res.string.no_restaurants_found))
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Text(text = stringResource(Res.string.no_restaurants_found))
+                }
             }
         }
         FloatingActionButton(
