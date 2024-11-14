@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,7 +47,7 @@ fun RestaurantTile(
                 ) {
                     Text(
                         text = stringResource(resource = Res.string.loading_screen_content),
-                        modifier = Modifier.alpha(0.5f)
+                        style = DairyFreeDiningTheme.typography.titleMedium
                     )
                 }
             }
