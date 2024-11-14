@@ -16,15 +16,15 @@ fun CategoryHeader(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        color = DairyFreeDiningTheme.color.surfaceVariant
+        color = DairyFreeDiningTheme.color.primaryContainer
     ) {
         Text(
             text = text,
-            modifier = modifier.padding(8.dp),
-            style = DairyFreeDiningTheme.typography.titleMedium,
+            modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+            style = DairyFreeDiningTheme.typography.titleMedium
         )
-        HorizontalDivider()
     }
+    HorizontalDivider()
 }
 
 @Preview

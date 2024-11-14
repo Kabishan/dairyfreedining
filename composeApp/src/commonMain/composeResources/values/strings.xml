@@ -13,6 +13,7 @@
     <string name="no_restaurants_found">No Restaurants Found</string>
 
     <!-- Details Screen -->
+    <string name="details_subheading">Dairy-Free Menu Items (with options)</string>
     <string name="details_search_bar_placeholder">Search foods…</string>
     <string name="no_food_items_found">No Food Items Found</string>
 

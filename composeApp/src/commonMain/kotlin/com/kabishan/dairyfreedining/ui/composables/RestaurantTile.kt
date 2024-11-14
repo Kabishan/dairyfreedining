@@ -59,7 +59,7 @@ fun RestaurantTile(
             modifier = Modifier.fillMaxSize()
         ) {
             Surface(
-                color = DairyFreeDiningTheme.color.surfaceVariant.copy(alpha = 0.9f)
+                color = DairyFreeDiningTheme.color.primaryContainer
             ) {
                 Text(
                     text = text,

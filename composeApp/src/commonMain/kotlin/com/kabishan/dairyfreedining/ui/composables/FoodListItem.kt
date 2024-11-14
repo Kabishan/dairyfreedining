@@ -1,6 +1,5 @@
 package com.kabishan.dairyfreedining.ui.composables
 
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,8 +31,6 @@ fun FoodListItem(
         },
         modifier = modifier
     )
-
-    HorizontalDivider()
 }
 
 @Preview

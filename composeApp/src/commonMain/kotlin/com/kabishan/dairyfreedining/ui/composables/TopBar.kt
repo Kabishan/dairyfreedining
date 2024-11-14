@@ -46,7 +46,9 @@ fun TopBar(
                 subTitle?.let {
                     Text(
                         text = it,
-                        style = DairyFreeDiningTheme.typography.titleSmall
+                        style = DairyFreeDiningTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }

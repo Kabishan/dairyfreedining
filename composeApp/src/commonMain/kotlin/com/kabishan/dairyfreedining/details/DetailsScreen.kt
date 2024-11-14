@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.details_search_bar_placeholder
+import dairyfreedining.composeapp.generated.resources.details_subheading
 import dairyfreedining.composeapp.generated.resources.no_food_items_found
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -51,7 +53,7 @@ fun DetailsScreen(
         topBar = {
             TopBar(
                 title = restaurantName,
-                subTitle = "Dairy-Free Menu Items",
+                subTitle = stringResource(Res.string.details_subheading),
                 navController = navController
             )
         },
@@ -140,11 +142,15 @@ private fun DetailsScreen(
                         )
                     }
 
-                    items(category.value) { foodItem ->
+                    itemsIndexed(category.value) { index, foodItem ->
                         FoodListItem(
                             foodItem = foodItem,
                             modifier = Modifier.fillMaxWidth()
                         )
+
+                        if (index < category.value.size - 1) {
+                            HorizontalDivider()
+                        }
                     }
                 }
             }
