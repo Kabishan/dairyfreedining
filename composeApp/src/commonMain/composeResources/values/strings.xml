@@ -11,6 +11,7 @@
     <!-- Landing Screen -->
     <string name="landing_search_bar_placeholder">Search restaurants…</string>
     <string name="no_restaurants_found">No Restaurants Found</string>
+    <string name="submit_food_item_floating_action_button_accessibility_text">Submit a dairy-free food item</string>
 
     <!-- Details Screen -->
     <string name="details_subheading">Dairy-Free Menu Items (with options)</string>

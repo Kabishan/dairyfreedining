@@ -40,6 +40,7 @@ import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.app_name
 import dairyfreedining.composeapp.generated.resources.landing_search_bar_placeholder
 import dairyfreedining.composeapp.generated.resources.no_restaurants_found
+import dairyfreedining.composeapp.generated.resources.submit_food_item_floating_action_button_accessibility_text
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -175,7 +176,7 @@ private fun RestaurantsList(
         ) {
             Icon(
                 Icons.Default.Edit,
-                contentDescription = null
+                contentDescription = stringResource(Res.string.submit_food_item_floating_action_button_accessibility_text)
             )
         }
     }

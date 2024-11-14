@@ -37,7 +37,7 @@ fun RestaurantTile(
     ) {
         KamelImage(
             resource = asyncPainterResource(data = imageUrl),
-            contentDescription = null,
+            contentDescription = String(),
             contentScale = ContentScale.Crop,
             onLoading = {
                 Column(
