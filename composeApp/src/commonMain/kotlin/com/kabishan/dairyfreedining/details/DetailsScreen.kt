@@ -26,6 +26,7 @@ import com.kabishan.dairyfreedining.model.RestaurantDetails
 import com.kabishan.dairyfreedining.ui.composables.CategoryHeader
 import com.kabishan.dairyfreedining.search.SearchBar
 import com.kabishan.dairyfreedining.search.SearchViewModel
+import com.kabishan.dairyfreedining.search.SearchViewModelFactory
 import com.kabishan.dairyfreedining.ui.composables.FoodListItem
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
@@ -47,7 +48,9 @@ fun DetailsScreen(
             repository = DetailsRepository()
         )
     ),
-    searchViewModel: SearchViewModel = viewModel<SearchViewModel>()
+    searchViewModel: SearchViewModel = viewModel(
+        factory = SearchViewModelFactory()
+    )
 ) {
     Scaffold(
         topBar = {
