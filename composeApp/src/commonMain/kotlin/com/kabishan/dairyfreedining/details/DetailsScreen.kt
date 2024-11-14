@@ -23,7 +23,8 @@ import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
 import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
 import com.kabishan.dairyfreedining.model.RestaurantDetails
 import com.kabishan.dairyfreedining.ui.composables.CategoryHeader
-import com.kabishan.dairyfreedining.ui.composables.DairyFreeDiningSearchBar
+import com.kabishan.dairyfreedining.search.SearchBar
+import com.kabishan.dairyfreedining.search.SearchViewModel
 import com.kabishan.dairyfreedining.ui.composables.FoodListItem
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
@@ -43,7 +44,8 @@ fun DetailsScreen(
             restaurantId = restaurantId,
             repository = DetailsRepository()
         )
-    )
+    ),
+    searchViewModel: SearchViewModel = viewModel<SearchViewModel>()
 ) {
     Scaffold(
         topBar = {
@@ -58,6 +60,8 @@ fun DetailsScreen(
     { innerPadding ->
         DetailsScreenContent(
             innerPadding,
+            searchViewModel.searchQuery.value,
+            searchViewModel::updateSearchQuery,
             viewModel.detailsState.value
         ) {
             viewModel.getRestaurantDetails(restaurantId)
@@ -68,6 +72,8 @@ fun DetailsScreen(
 @Composable
 private fun DetailsScreenContent(
     innerPadding: PaddingValues,
+    searchQuery: String,
+    updateSearchQuery: (String) -> Unit,
     detailsState: DetailsState,
     getRestaurantDetails: () -> Unit
 ) {
@@ -77,7 +83,12 @@ private fun DetailsScreenContent(
             .padding(innerPadding)
     ) {
         when (detailsState) {
-            is DetailsState.ShowSuccess -> DetailsScreen(detailsState.details.categories)
+            is DetailsState.ShowSuccess -> DetailsScreen(
+                detailsState.details.categories,
+                searchQuery,
+                updateSearchQuery
+            )
+
             DetailsState.ShowLoading -> LoadingMessage()
             DetailsState.ShowError -> ErrorMessage(getRestaurantDetails)
         }
@@ -85,28 +96,29 @@ private fun DetailsScreenContent(
 }
 
 @Composable
-private fun DetailsScreen(categories: Map<String, List<String>>) {
-    val searchQuery: MutableState<String> = remember { mutableStateOf(String()) }
+private fun DetailsScreen(
+    categories: Map<String, List<String>>,
+    searchQuery: String,
+    updateSearchQuery: (String) -> Unit
+) {
     val categoriesMap: MutableState<Map<String, List<String>>> =
         remember { mutableStateOf(categories) }
 
-    DairyFreeDiningSearchBar(
-        query = searchQuery.value,
-        onQueryChange = { query ->
-            searchQuery.value = query
-
-            if (searchQuery.value.trim().isNotBlank()) {
-                categoriesMap.value = categories.map { (category, foods) ->
-                    Pair(
-                        category,
-                        foods.filter { it.contains(searchQuery.value.trim(), ignoreCase = true) })
-                }.toMap()
-            } else {
-                categoriesMap.value = categories
-            }
-        },
+    SearchBar(
+        query = searchQuery,
+        onQueryChange = { query -> updateSearchQuery(query) },
         placeholderText = stringResource(resource = Res.string.details_search_bar_placeholder)
     )
+
+    if (searchQuery.trim().isNotBlank()) {
+        categoriesMap.value = categories.map { (category, foods) ->
+            Pair(
+                category,
+                foods.filter { it.contains(searchQuery.trim(), ignoreCase = true) })
+        }.toMap()
+    } else {
+        categoriesMap.value = categories
+    }
 
     if (categoriesMap.value.values.flatten().isEmpty()) {
         Box(
@@ -146,6 +158,8 @@ private fun DetailsScreenPreview() {
     DairyFreeDiningTheme {
         DetailsScreenContent(
             innerPadding = PaddingValues(),
+            searchQuery = String(),
+            updateSearchQuery = {},
             detailsState = DetailsState.ShowSuccess(
                 RestaurantDetails(
                     mapOf(

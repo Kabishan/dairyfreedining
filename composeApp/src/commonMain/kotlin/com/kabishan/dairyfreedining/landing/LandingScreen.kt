@@ -30,7 +30,8 @@ import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
 import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
 import com.kabishan.dairyfreedining.model.Restaurant
 import com.kabishan.dairyfreedining.navigateTo
-import com.kabishan.dairyfreedining.ui.composables.DairyFreeDiningSearchBar
+import com.kabishan.dairyfreedining.search.SearchBar
+import com.kabishan.dairyfreedining.search.SearchViewModel
 import com.kabishan.dairyfreedining.ui.composables.RestaurantTile
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
@@ -48,7 +49,8 @@ fun LandingScreen(
         factory = LandingViewModelFactory(
             LandingRepository()
         )
-    )
+    ),
+    searchViewModel: SearchViewModel = viewModel<SearchViewModel>()
 ) {
     Scaffold(
         topBar = {
@@ -62,6 +64,8 @@ fun LandingScreen(
     ) { innerPadding ->
         LandingScreenContent(
             innerPadding,
+            searchViewModel.searchQuery.value,
+            searchViewModel::updateSearchQuery,
             viewModel.landingState.value,
             viewModel::getRestaurants,
             { restaurantId: String, restaurantName: String ->
@@ -80,6 +84,8 @@ fun LandingScreen(
 @Composable
 private fun LandingScreenContent(
     innerPadding: PaddingValues,
+    searchQuery: String,
+    updateSearchQuery: (String) -> Unit,
     landingState: LandingState,
     getRestaurants: () -> Unit,
     navigateToDetails: (String, String) -> Unit,
@@ -92,10 +98,13 @@ private fun LandingScreenContent(
     ) {
         when (landingState) {
             is LandingState.ShowSuccess -> RestaurantsList(
+                searchQuery,
+                updateSearchQuery,
                 landingState.restaurantList,
                 navigateToDetails,
                 navigateToSubmission
             )
+
             LandingState.ShowLoading -> LoadingMessage()
             LandingState.ShowError -> ErrorMessage(getRestaurants)
         }
@@ -104,31 +113,31 @@ private fun LandingScreenContent(
 
 @Composable
 private fun RestaurantsList(
+    searchQuery: String,
+    updateSearchQuery: (String) -> Unit,
     restaurants: List<Restaurant>,
     navigateToDetails: (String, String) -> Unit,
     navigateToSubmission: () -> Unit,
 ) {
     val restaurantList: MutableState<List<Restaurant>> = remember { mutableStateOf(restaurants) }
-    val searchQuery: MutableState<String> = remember { mutableStateOf(String()) }
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         Column {
-            DairyFreeDiningSearchBar(
-                query = searchQuery.value,
-                onQueryChange = {
-                    searchQuery.value = it
-                    if (searchQuery.value.trim().isNotBlank()) {
-                        restaurantList.value = restaurants.filter { restaurant ->
-                            restaurant.name.contains(searchQuery.value.trim(), ignoreCase = true)
-                        }
-                    } else {
-                        restaurantList.value = restaurants
-                    }
-                },
+            SearchBar(
+                query = searchQuery,
+                onQueryChange = { query -> updateSearchQuery(query) },
                 placeholderText = stringResource(resource = Res.string.landing_search_bar_placeholder)
             )
+
+            if (searchQuery.trim().isNotBlank()) {
+                restaurantList.value = restaurants.filter { restaurant ->
+                    restaurant.name.contains(searchQuery.trim(), ignoreCase = true)
+                }
+            } else {
+                restaurantList.value = restaurants
+            }
 
             if (restaurantList.value.isNotEmpty()) {
                 LazyVerticalGrid(
@@ -175,12 +184,14 @@ private fun LandingScreenContentPreview() {
     DairyFreeDiningTheme {
         LandingScreenContent(
             innerPadding = PaddingValues(),
+            searchQuery = String(),
+            updateSearchQuery = {},
             landingState = LandingState.ShowSuccess(
                 listOf(Restaurant(id = "id", "imageUrl", name = "McDonald's"))
             ),
-            {},
-            { _: String, _: String -> },
-            {}
+            getRestaurants = {},
+            navigateToDetails = { _: String, _: String -> },
+            navigateToSubmission = {}
         )
     }
 }

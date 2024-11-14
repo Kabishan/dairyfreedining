@@ -1,4 +1,4 @@
-package com.kabishan.dairyfreedining.ui.composables
+package com.kabishan.dairyfreedining.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun DairyFreeDiningSearchBar(
+fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     placeholderText: String,
@@ -60,7 +60,7 @@ fun DairyFreeDiningSearchBar(
 @Composable
 private fun DairyFreeDiningSearchBarPreview() {
     DairyFreeDiningTheme {
-        DairyFreeDiningSearchBar(
+        SearchBar(
             query = "Test",
             onQueryChange = {},
             placeholderText = "Search something..."
