@@ -10,3 +10,6 @@
 
 -keep class kotlin.** { *; }
 -keep class kotlinx.coroutines.** { *; }
+
+# GMS Measurement Play Services crash on Proguard Release builds
+-keep class com.google.android.gms.measurement.internal.** { *; }

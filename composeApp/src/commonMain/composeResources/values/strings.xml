@@ -37,7 +37,7 @@
     <!-- About Screen -->
     <string name="about_screen">About</string>
     <string name="about_me_header">About Me</string>
-    <string name="about_me_paragraph_1">Hello, I'm Kabishan, a software engineer at RBC. After discovering that dairy was the culprit behind my lifelong acne struggles, I learned that I am allergic to dairy rather than simply lactose intolerant. This realization led to the challenge of explaining my dairy-free lifestyle to family and colleagues. While my family was supportive, navigating social situations at work and family gatherings became awkward due to my dietary restrictions.</string>
+    <string name="about_me_paragraph_1">Hello, I'm Kabishan, a senior software engineer and prompt engineer specializing in Android development. After discovering that dairy was the culprit behind my lifelong acne struggles, I learned that I am allergic to dairy rather than simply lactose intolerant. This realization led to the challenge of explaining my dairy-free lifestyle to family and colleagues. While my family was supportive, navigating social situations at work and family gatherings became awkward due to my dietary restrictions.</string>
     <string name="about_me_paragraph_2">To alleviate the discomfort of avoiding events where I was uncertain about the availability of dairy-free options, I created this app. Its purpose is to help users find dairy-free items conveniently, reducing the need for awkward explanations and ensuring smoother dining experiences.</string>
     <string name="credits_header">Credits</string>
     <string name="credits_content_paragraph_1">We extend our gratitude to GoDairyFree for providing an initial list of dairy-free options at popular fast food chains.</string>
