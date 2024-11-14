@@ -1,5 +1,7 @@
 package com.kabishan.dairyfreedining
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -20,7 +22,11 @@ fun DairyFreeDiningApp() {
 
         NavHost(
             navController = navController,
-            startDestination = DestinationScreen.Landing.route
+            startDestination = DestinationScreen.Landing.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(300)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(300)) },
+            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300)) }
         ) {
             composable(route = DestinationScreen.Landing.route) {
                 LandingScreen(navController = navController)
