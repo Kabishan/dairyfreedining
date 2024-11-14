@@ -10,12 +10,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.kabishan.dairyfreedining.ui.composables.CategoryHeader
+import com.kabishan.dairyfreedining.ui.composables.Subheader
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 import dairyfreedining.composeapp.generated.resources.Res
@@ -57,7 +56,7 @@ private fun AboutScreenContent(innerPadding: PaddingValues) {
             .padding(innerPadding)
             .verticalScroll(state = scrollState)
     ) {
-        CategoryHeader(
+        Subheader(
             text = stringResource(resource = Res.string.about_me_header),
             modifier = Modifier.fillMaxWidth()
         )
@@ -77,7 +76,7 @@ private fun AboutScreenContent(innerPadding: PaddingValues) {
                 .padding(bottom = 8.dp)
         )
 
-        CategoryHeader(
+        Subheader(
             text = stringResource(resource = Res.string.credits_header),
             modifier = Modifier.fillMaxWidth()
         )
@@ -87,7 +86,7 @@ private fun AboutScreenContent(innerPadding: PaddingValues) {
             modifier = Modifier.padding(8.dp)
         )
 
-        CategoryHeader(
+        Subheader(
             stringResource(resource = Res.string.disclaimer_header),
             modifier = Modifier.fillMaxWidth()
         )

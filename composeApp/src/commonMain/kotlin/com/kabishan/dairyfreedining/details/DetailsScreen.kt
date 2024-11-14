@@ -23,7 +23,7 @@ import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
 import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
 import com.kabishan.dairyfreedining.model.RestaurantDetails
-import com.kabishan.dairyfreedining.ui.composables.CategoryHeader
+import com.kabishan.dairyfreedining.ui.composables.Subheader
 import com.kabishan.dairyfreedining.search.SearchBar
 import com.kabishan.dairyfreedining.search.SearchViewModel
 import com.kabishan.dairyfreedining.search.SearchViewModelFactory
@@ -137,7 +137,7 @@ private fun DetailsScreen(
             categoriesMap.value.forEach { category ->
                 if (category.value.isNotEmpty()) {
                     item {
-                        CategoryHeader(
+                        Subheader(
                             text = category.key,
                             modifier = Modifier
                                 .fillMaxWidth()
