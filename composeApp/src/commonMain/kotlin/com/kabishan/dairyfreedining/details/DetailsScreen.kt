@@ -49,6 +49,7 @@ fun DetailsScreen(
         topBar = {
             TopBar(
                 title = restaurantName,
+                subTitle = "Dairy-Free Menu Items",
                 navController = navController
             )
         },

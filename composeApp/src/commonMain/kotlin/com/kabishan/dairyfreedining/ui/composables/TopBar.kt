@@ -1,6 +1,7 @@
 package com.kabishan.dairyfreedining.ui.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.DestinationScreen
@@ -26,6 +28,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun TopBar(
     title: String,
+    subTitle: String? = null,
     modifier: Modifier = Modifier,
     navController: NavController?,
     showAboutIcon: Boolean = true,
@@ -33,10 +36,20 @@ fun TopBar(
 ) {
     TopAppBar(
         title = {
-            Text(
-                text = title,
-                style = DairyFreeDiningTheme.typography.titleLarge
-            )
+            Column {
+                Text(
+                    text = title,
+                    style = DairyFreeDiningTheme.typography.titleLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                subTitle?.let {
+                    Text(
+                        text = it,
+                        style = DairyFreeDiningTheme.typography.titleSmall
+                    )
+                }
+            }
         },
         actions = {
             if (showAboutIcon) {
