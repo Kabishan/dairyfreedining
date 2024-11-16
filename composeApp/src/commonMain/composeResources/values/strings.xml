@@ -8,6 +8,12 @@
     <string name="search_bar_leading">Search</string>
     <string name="search_bar_trailing">Clear</string>
 
+    <!-- Filters -->
+    <string name="filter_bar_name">Filters</string>
+    <string name="filter_categories">Categories</string>
+    <string name="filter_clear_all">Clear all</string>
+    <string name="filter_add_all">Add all</string>
+
     <!-- Landing Screen -->
     <string name="landing_search_bar_placeholder">Search restaurants…</string>
     <string name="no_restaurants_found">No Restaurants Found</string>
