@@ -89,7 +89,7 @@ private fun DetailsScreenContent(
     ) {
         when (detailsState) {
             is DetailsState.ShowSuccess -> DetailsScreen(
-                detailsState.details.categories,
+                detailsState.details.categories.filter { (_, foodList) -> foodList.isNotEmpty() },
                 searchQuery,
                 updateSearchQuery
             )
@@ -125,7 +125,7 @@ private fun DetailsScreen(
         categoriesMap.value = categories
     }
 
-    if (categoriesMap.value.values.flatten().isEmpty()) {
+    if (categoriesMap.value.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
