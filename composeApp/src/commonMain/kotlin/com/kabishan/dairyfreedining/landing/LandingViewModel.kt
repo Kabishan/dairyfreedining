@@ -12,6 +12,8 @@ class LandingViewModel(private val repository: LandingRepository) : ViewModel() 
     var landingState: MutableState<LandingState> = mutableStateOf(LandingState.ShowLoading)
         private set
 
+    val searchQuery: MutableState<String> = mutableStateOf(String())
+
     init {
         getRestaurants()
     }
@@ -24,8 +26,13 @@ class LandingViewModel(private val repository: LandingRepository) : ViewModel() 
                 Status.SUCCESS -> result.data?.let {
                     LandingState.ShowSuccess(it)
                 } ?: LandingState.ShowSuccess(listOf())
+
                 Status.FAILURE -> LandingState.ShowError
             }
         }
+    }
+
+    fun updateSearchQuery(updatedSearchQuery: String) {
+        searchQuery.value = updatedSearchQuery
     }
 }

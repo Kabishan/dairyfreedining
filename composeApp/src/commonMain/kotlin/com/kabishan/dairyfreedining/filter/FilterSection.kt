@@ -34,8 +34,6 @@ fun FilterSection(
     onSelectionCleared: () -> Unit,
     onSelectionReset: () -> Unit
 ) {
-    HorizontalDivider()
-
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,

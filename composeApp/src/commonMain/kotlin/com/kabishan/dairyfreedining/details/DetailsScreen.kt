@@ -26,8 +26,6 @@ import com.kabishan.dairyfreedining.filter.FilterSection
 import com.kabishan.dairyfreedining.filter.FilterTab
 import com.kabishan.dairyfreedining.model.RestaurantDetails
 import com.kabishan.dairyfreedining.search.SearchBar
-import com.kabishan.dairyfreedining.search.SearchViewModel
-import com.kabishan.dairyfreedining.search.SearchViewModelFactory
 import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
 import com.kabishan.dairyfreedining.ui.composables.FoodListItem
 import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
@@ -35,9 +33,9 @@ import com.kabishan.dairyfreedining.ui.composables.Subheader
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 import dairyfreedining.composeapp.generated.resources.Res
-import dairyfreedining.composeapp.generated.resources.filter_categories
 import dairyfreedining.composeapp.generated.resources.details_search_bar_placeholder
 import dairyfreedining.composeapp.generated.resources.details_subheading
+import dairyfreedining.composeapp.generated.resources.filter_categories
 import dairyfreedining.composeapp.generated.resources.no_food_items_found
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -52,9 +50,6 @@ fun DetailsScreen(
             restaurantId = restaurantId,
             repository = DetailsRepository()
         )
-    ),
-    searchViewModel: SearchViewModel = viewModel(
-        factory = SearchViewModelFactory()
     )
 ) {
     Scaffold(
@@ -70,12 +65,15 @@ fun DetailsScreen(
     { innerPadding ->
         DetailsScreenContent(
             innerPadding,
-            searchViewModel.searchQuery.value,
-            searchViewModel::updateSearchQuery,
-            viewModel.detailsState.value
-        ) {
-            viewModel.getRestaurantDetails(restaurantId)
-        }
+            viewModel.searchQuery.value,
+            viewModel::updateSearchQuery,
+            viewModel.detailsState.value,
+            { viewModel.getRestaurantDetails(restaurantId) },
+            viewModel.selectedCategoryList.value,
+            viewModel::updateSelectedCategoryList,
+            viewModel::clearSelectedCategoryList,
+            viewModel::resetSelectedCategoryList
+        )
     }
 }
 
@@ -85,7 +83,11 @@ private fun DetailsScreenContent(
     searchQuery: String,
     updateSearchQuery: (String) -> Unit,
     detailsState: DetailsState,
-    getRestaurantDetails: () -> Unit
+    getRestaurantDetails: () -> Unit,
+    selectedCategoryList: List<String>,
+    updateSelectedCategoryList: (String) -> Unit,
+    clearSelectedCategoryList: () -> Unit,
+    resetSelectedCategoryList: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -96,7 +98,11 @@ private fun DetailsScreenContent(
             is DetailsState.ShowSuccess -> DetailsScreen(
                 detailsState.details.categories.filter { (_, foodList) -> foodList.isNotEmpty() },
                 searchQuery,
-                updateSearchQuery
+                updateSearchQuery,
+                selectedCategoryList,
+                updateSelectedCategoryList,
+                clearSelectedCategoryList,
+                resetSelectedCategoryList
             )
 
             DetailsState.ShowLoading -> LoadingMessage()
@@ -110,12 +116,18 @@ private fun DetailsScreenContent(
 private fun DetailsScreen(
     categories: Map<String, List<String>>,
     searchQuery: String,
-    updateSearchQuery: (String) -> Unit
+    updateSearchQuery: (String) -> Unit,
+    selectedCategoryList: List<String>,
+    updateSelectedCategoryList: (String) -> Unit,
+    clearSelectedCategoryList: () -> Unit,
+    resetSelectedCategoryList: () -> Unit
 ) {
     val displayCategories: MutableState<Map<String, List<String>>> =
         remember { mutableStateOf(categories) }
-    val selectedCategoryList: MutableState<List<String>> =
-        remember { mutableStateOf(categories.keys.toList()) }
+
+    val selectedCategories = categories.filterKeys { category ->
+        selectedCategoryList.contains(category)
+    }
 
     val isBottomSheetShown = remember { mutableStateOf(false) }
 
@@ -137,26 +149,12 @@ private fun DetailsScreen(
             FilterSection(
                 sectionName = stringResource(Res.string.filter_categories),
                 allItems = categories.keys.toList(),
-                selectedItems = selectedCategoryList.value,
-                onSelectionChanged = { category ->
-                    val previousSelection = selectedCategoryList.value.toMutableList()
-
-                    if (previousSelection.contains(category)) {
-                        previousSelection.remove(category)
-                    } else {
-                        previousSelection.add(category)
-                    }
-
-                    selectedCategoryList.value = previousSelection
-                },
-                onSelectionCleared = { selectedCategoryList.value = listOf() },
-                onSelectionReset = { selectedCategoryList.value = categories.keys.toList() }
+                selectedItems = selectedCategoryList,
+                onSelectionChanged = { category -> updateSelectedCategoryList(category) },
+                onSelectionCleared = clearSelectedCategoryList,
+                onSelectionReset = resetSelectedCategoryList
             )
         }
-    }
-
-    val selectedCategories = categories.filterKeys { category ->
-        selectedCategoryList.value.contains(category)
     }
 
     displayCategories.value = if (searchQuery.trim().isNotBlank()) {
@@ -171,7 +169,9 @@ private fun DetailsScreen(
 
     if (displayCategories.value.values.flatten().isEmpty()) {
         Box(
-            modifier = Modifier.fillMaxSize().padding(top = 8.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 8.dp),
             contentAlignment = Alignment.TopCenter
         ) {
             Text(text = stringResource(Res.string.no_food_items_found))
@@ -221,7 +221,12 @@ private fun DetailsScreenPreview() {
                     "id",
                     "McDonald's"
                 )
-            )
-        ) {}
+            ),
+            getRestaurantDetails = {},
+            selectedCategoryList = listOf(),
+            updateSelectedCategoryList = {},
+            clearSelectedCategoryList = {},
+            resetSelectedCategoryList = {}
+        )
     }
 }

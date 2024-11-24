@@ -26,13 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.DestinationScreen
-import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
-import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
 import com.kabishan.dairyfreedining.model.Restaurant
 import com.kabishan.dairyfreedining.navigateTo
 import com.kabishan.dairyfreedining.search.SearchBar
-import com.kabishan.dairyfreedining.search.SearchViewModel
-import com.kabishan.dairyfreedining.search.SearchViewModelFactory
+import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
+import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
 import com.kabishan.dairyfreedining.ui.composables.RestaurantTile
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
@@ -51,9 +49,6 @@ fun LandingScreen(
         factory = LandingViewModelFactory(
             LandingRepository()
         )
-    ),
-    searchViewModel: SearchViewModel = viewModel(
-        factory = SearchViewModelFactory()
     )
 ) {
     Scaffold(
@@ -68,8 +63,8 @@ fun LandingScreen(
     ) { innerPadding ->
         LandingScreenContent(
             innerPadding,
-            searchViewModel.searchQuery.value,
-            searchViewModel::updateSearchQuery,
+            viewModel.searchQuery.value,
+            viewModel::updateSearchQuery,
             viewModel.landingState.value,
             viewModel::getRestaurants,
             { restaurantId: String, restaurantName: String ->
