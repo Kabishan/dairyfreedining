@@ -9,10 +9,16 @@ import kotlinx.coroutines.launch
 
 class LandingViewModel(private val repository: LandingRepository) : ViewModel() {
 
-    var landingState: MutableState<LandingState> = mutableStateOf(LandingState.ShowLoading)
-        private set
+    private val landingState: MutableState<LandingState> = mutableStateOf(LandingState.ShowLoading)
 
-    val searchQuery: MutableState<String> = mutableStateOf(String())
+    private val searchQuery: MutableState<String> = mutableStateOf(String())
+
+    val landingScreenStateHolder = LandingScreenStateHolder(
+        landingState,
+        searchQuery,
+        ::getRestaurants,
+        ::updateSearchQuery
+    )
 
     init {
         getRestaurants()
@@ -35,4 +41,11 @@ class LandingViewModel(private val repository: LandingRepository) : ViewModel() 
     fun updateSearchQuery(updatedSearchQuery: String) {
         searchQuery.value = updatedSearchQuery
     }
+
+    data class LandingScreenStateHolder(
+        val landingState: MutableState<LandingState>,
+        val searchQuery: MutableState<String>,
+        val getRestaurants: () -> Unit,
+        val updateSearchQuery: (String) -> Unit
+    )
 }

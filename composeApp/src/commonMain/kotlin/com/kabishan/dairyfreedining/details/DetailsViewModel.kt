@@ -12,13 +12,22 @@ class DetailsViewModel(
     val repository: DetailsRepository
 ) : ViewModel() {
 
-    var detailsState: MutableState<DetailsState> = mutableStateOf(DetailsState.ShowLoading)
-        private set
+    private val detailsState: MutableState<DetailsState> = mutableStateOf(DetailsState.ShowLoading)
 
-    val searchQuery: MutableState<String> = mutableStateOf(String())
+    private val searchQuery: MutableState<String> = mutableStateOf(String())
 
-    var selectedCategoryList: MutableState<List<String>> = mutableStateOf(listOf())
-        private set
+    private val selectedCategoryList: MutableState<List<String>> = mutableStateOf(listOf())
+
+    val detailsScreenStateHolder: DetailsScreenStateHolder = DetailsScreenStateHolder(
+        detailsState,
+        searchQuery,
+        selectedCategoryList,
+        ::getRestaurantDetails,
+        ::updateSearchQuery,
+        ::updateSelectedCategoryList,
+        ::clearSelectedCategoryList,
+        ::resetSelectedCategoryList
+    )
 
     init {
         getRestaurantDetails(restaurantId)
@@ -31,7 +40,7 @@ class DetailsViewModel(
             detailsState.value = when (result.status) {
                 // Handle empty details
                 Status.SUCCESS -> result.data?.let {
-                    selectedCategoryList = mutableStateOf(it.categories.keys.toList())
+                    selectedCategoryList.value = it.categories.keys.toList()
                     DetailsState.ShowSuccess(details = it)
                 } ?: DetailsState.ShowError
 
@@ -66,4 +75,15 @@ class DetailsViewModel(
                 (detailsState.value as DetailsState.ShowSuccess).details.categories.keys.toList()
         }
     }
+
+    data class DetailsScreenStateHolder(
+        val detailsState: MutableState<DetailsState>,
+        val searchQuery: MutableState<String>,
+        val selectedCategoryList: MutableState<List<String>>,
+        val getRestaurantDetails: (String) -> Unit,
+        val updateSearchQuery: (String) -> Unit,
+        val updateSelectedCategoryList: (String) -> Unit,
+        val clearSelectedCategoryList: () -> Unit,
+        val resetSelectedCategoryList: () -> Unit,
+    )
 }

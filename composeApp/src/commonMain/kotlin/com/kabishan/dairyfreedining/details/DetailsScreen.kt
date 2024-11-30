@@ -43,7 +43,6 @@ import com.pseudoankit.coachmark.UnifyCoachmark
 import com.pseudoankit.coachmark.model.HighlightedViewConfig
 import com.pseudoankit.coachmark.model.OverlayClickEvent
 import com.pseudoankit.coachmark.model.ToolTipPlacement
-import com.pseudoankit.coachmark.overlay.DimOverlayEffect
 import com.pseudoankit.coachmark.scope.enableCoachMark
 import com.pseudoankit.coachmark.shape.Arrow
 import dairyfreedining.composeapp.generated.resources.Res
@@ -80,7 +79,6 @@ fun DetailsScreen(
     }
 
     UnifyCoachmark(
-        overlayEffect = DimOverlayEffect(DairyFreeDiningTheme.color.scrim.copy(alpha = .5f)),
         onOverlayClicked = {
             coroutineScope.launch {
                 dataStoreRepository.setBooleanPreference(
@@ -104,14 +102,8 @@ fun DetailsScreen(
         { innerPadding ->
             DetailsScreenContent(
                 innerPadding,
-                viewModel.searchQuery.value,
-                viewModel::updateSearchQuery,
-                viewModel.detailsState.value,
-                { viewModel.getRestaurantDetails(restaurantId) },
-                viewModel.selectedCategoryList.value,
-                viewModel::updateSelectedCategoryList,
-                viewModel::clearSelectedCategoryList,
-                viewModel::resetSelectedCategoryList,
+                restaurantId,
+                viewModel.detailsScreenStateHolder,
                 showCoachMark
             )
         }
@@ -121,14 +113,8 @@ fun DetailsScreen(
 @Composable
 private fun DetailsScreenContent(
     innerPadding: PaddingValues,
-    searchQuery: String,
-    updateSearchQuery: (String) -> Unit,
-    detailsState: DetailsState,
-    getRestaurantDetails: () -> Unit,
-    selectedCategoryList: List<String>,
-    updateSelectedCategoryList: (String) -> Unit,
-    clearSelectedCategoryList: () -> Unit,
-    resetSelectedCategoryList: () -> Unit,
+    restaurantId: String,
+    detailsScreenStateHolder: DetailsViewModel.DetailsScreenStateHolder,
     showCoachMark: Boolean?
 ) {
     Column(
@@ -136,20 +122,22 @@ private fun DetailsScreenContent(
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        when (detailsState) {
+        when (val detailsState = detailsScreenStateHolder.detailsState.value) {
             is DetailsState.ShowSuccess -> DetailsScreen(
                 detailsState.details.categories.filter { (_, foodList) -> foodList.isNotEmpty() },
-                searchQuery,
-                updateSearchQuery,
-                selectedCategoryList,
-                updateSelectedCategoryList,
-                clearSelectedCategoryList,
-                resetSelectedCategoryList,
+                detailsScreenStateHolder.searchQuery.value,
+                detailsScreenStateHolder.updateSearchQuery,
+                detailsScreenStateHolder.selectedCategoryList.value,
+                detailsScreenStateHolder.updateSelectedCategoryList,
+                detailsScreenStateHolder.clearSelectedCategoryList,
+                detailsScreenStateHolder.resetSelectedCategoryList,
                 showCoachMark
             )
 
             DetailsState.ShowLoading -> LoadingMessage()
-            DetailsState.ShowError -> ErrorMessage(getRestaurantDetails)
+            DetailsState.ShowError -> ErrorMessage {
+                detailsScreenStateHolder.getRestaurantDetails(restaurantId)
+            }
         }
     }
 }
@@ -280,22 +268,27 @@ private fun DetailsScreenPreview() {
     DairyFreeDiningTheme {
         DetailsScreenContent(
             innerPadding = PaddingValues(),
-            searchQuery = String(),
-            updateSearchQuery = {},
-            detailsState = DetailsState.ShowSuccess(
-                RestaurantDetails(
-                    mapOf(
-                        Pair("Chicken", listOf("McChicken"))
-                    ),
-                    "id",
-                    "McDonald's"
-                )
+            restaurantId = "",
+            detailsScreenStateHolder = DetailsViewModel.DetailsScreenStateHolder(
+                searchQuery = mutableStateOf(String()),
+                updateSearchQuery = {},
+                detailsState = mutableStateOf(
+                    DetailsState.ShowSuccess(
+                        RestaurantDetails(
+                            mapOf(
+                                Pair("Chicken", listOf("McChicken"))
+                            ),
+                            "id",
+                            "McDonald's"
+                        )
+                    )
+                ),
+                getRestaurantDetails = {},
+                selectedCategoryList = mutableStateOf(listOf()),
+                updateSelectedCategoryList = {},
+                clearSelectedCategoryList = {},
+                resetSelectedCategoryList = {}
             ),
-            getRestaurantDetails = {},
-            selectedCategoryList = listOf(),
-            updateSelectedCategoryList = {},
-            clearSelectedCategoryList = {},
-            resetSelectedCategoryList = {},
             showCoachMark = false
         )
     }

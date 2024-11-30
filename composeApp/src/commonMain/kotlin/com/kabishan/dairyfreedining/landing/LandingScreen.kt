@@ -45,7 +45,6 @@ import com.pseudoankit.coachmark.UnifyCoachmark
 import com.pseudoankit.coachmark.model.HighlightedViewConfig
 import com.pseudoankit.coachmark.model.OverlayClickEvent
 import com.pseudoankit.coachmark.model.ToolTipPlacement
-import com.pseudoankit.coachmark.overlay.DimOverlayEffect
 import com.pseudoankit.coachmark.scope.enableCoachMark
 import com.pseudoankit.coachmark.shape.Arrow
 import dairyfreedining.composeapp.generated.resources.Res
@@ -79,7 +78,6 @@ fun LandingScreen(
     }
 
     UnifyCoachmark(
-        overlayEffect = DimOverlayEffect(DairyFreeDiningTheme.color.scrim.copy(alpha = .5f)),
         onOverlayClicked = {
             coroutineScope.launch {
                 dataStoreRepository.setBooleanPreference(
@@ -102,10 +100,7 @@ fun LandingScreen(
         ) { innerPadding ->
             LandingScreenContent(
                 innerPadding,
-                viewModel.searchQuery.value,
-                viewModel::updateSearchQuery,
-                viewModel.landingState.value,
-                viewModel::getRestaurants,
+                viewModel.landingScreenStateHolder,
                 { restaurantId: String, restaurantName: String ->
                     navigateTo(
                         navController,
@@ -124,10 +119,7 @@ fun LandingScreen(
 @Composable
 private fun LandingScreenContent(
     innerPadding: PaddingValues,
-    searchQuery: String,
-    updateSearchQuery: (String) -> Unit,
-    landingState: LandingState,
-    getRestaurants: () -> Unit,
+    landingScreenStateHolder: LandingViewModel.LandingScreenStateHolder,
     navigateToDetails: (String, String) -> Unit,
     navigateToSubmission: () -> Unit,
     showCoachMark: Boolean?
@@ -137,10 +129,10 @@ private fun LandingScreenContent(
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        when (landingState) {
+        when (val landingState = landingScreenStateHolder.landingState.value) {
             is LandingState.ShowSuccess -> RestaurantsList(
-                searchQuery,
-                updateSearchQuery,
+                landingScreenStateHolder.searchQuery.value,
+                landingScreenStateHolder.updateSearchQuery,
                 landingState.restaurantList,
                 navigateToDetails,
                 navigateToSubmission,
@@ -148,7 +140,7 @@ private fun LandingScreenContent(
             )
 
             LandingState.ShowLoading -> LoadingMessage()
-            LandingState.ShowError -> ErrorMessage(getRestaurants)
+            LandingState.ShowError -> ErrorMessage(landingScreenStateHolder.getRestaurants)
         }
     }
 }
@@ -251,12 +243,16 @@ private fun LandingScreenContentPreview() {
     DairyFreeDiningTheme {
         LandingScreenContent(
             innerPadding = PaddingValues(),
-            searchQuery = String(),
-            updateSearchQuery = {},
-            landingState = LandingState.ShowSuccess(
-                listOf(Restaurant(id = "id", "imageUrl", name = "McDonald's"))
+            landingScreenStateHolder = LandingViewModel.LandingScreenStateHolder(
+                searchQuery = mutableStateOf(String()),
+                updateSearchQuery = {},
+                landingState = mutableStateOf(
+                    LandingState.ShowSuccess(
+                        listOf(Restaurant(id = "id", "imageUrl", name = "McDonald's"))
+                    )
+                ),
+                getRestaurants = {}
             ),
-            getRestaurants = {},
             navigateToDetails = { _: String, _: String -> },
             navigateToSubmission = {},
             showCoachMark = false

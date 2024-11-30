@@ -14,12 +14,19 @@ class SubmissionViewModel(
     private val repository: SubmissionRepository
 ) : ViewModel() {
 
-    var submissionState: MutableState<SubmissionState> = mutableStateOf(SubmissionState.Initial)
-        private set
+    private val submissionState: MutableState<SubmissionState> =
+        mutableStateOf(SubmissionState.Initial)
 
-    var submissionTextFieldState: MutableState<SubmissionTextFieldState> =
+    private val submissionTextFieldState: MutableState<SubmissionTextFieldState> =
         mutableStateOf(SubmissionTextFieldState())
-        private set
+
+    val submissionScreenStateHolder = SubmissionScreenStateHolder(
+        submissionState,
+        submissionTextFieldState,
+        ::handleSubmissionTextFieldEvent,
+        ::resetSubmissionState,
+        ::submitFood
+    )
 
     fun handleSubmissionTextFieldEvent(event: SubmissionTextFieldEvent) {
         when (event) {
@@ -61,6 +68,7 @@ class SubmissionViewModel(
                             resetSubmissionTextFieldState()
                             SubmissionState.ShowSuccess
                         }
+
                         Status.FAILURE -> {
                             SubmissionState.ShowError(Res.string.submission_screen_error_network)
                         }
@@ -72,6 +80,14 @@ class SubmissionViewModel(
             }
         }
     }
+
+    data class SubmissionScreenStateHolder(
+        val submissionState: MutableState<SubmissionState>,
+        val submissionTextFieldState: MutableState<SubmissionTextFieldState>,
+        val handleSubmissionTextFieldEvent: (SubmissionTextFieldEvent) -> Unit,
+        val resetSubmissionState: () -> Unit,
+        val submitFood: () -> Unit
+    )
 }
 
 data class SubmissionTextFieldState(
@@ -81,7 +97,7 @@ data class SubmissionTextFieldState(
 )
 
 sealed class SubmissionTextFieldEvent {
-    data class RestaurantTextChanged(val restaurant: String): SubmissionTextFieldEvent()
-    data class CategoryTextChanged(val category: String): SubmissionTextFieldEvent()
-    data class FoodTextChanged(val food: String): SubmissionTextFieldEvent()
+    data class RestaurantTextChanged(val restaurant: String) : SubmissionTextFieldEvent()
+    data class CategoryTextChanged(val category: String) : SubmissionTextFieldEvent()
+    data class FoodTextChanged(val food: String) : SubmissionTextFieldEvent()
 }
