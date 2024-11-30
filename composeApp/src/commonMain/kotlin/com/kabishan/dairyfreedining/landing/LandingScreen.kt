@@ -28,21 +28,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.kabishan.dairyfreedining.DataStoreRepository
 import com.kabishan.dairyfreedining.DestinationScreen
+import com.kabishan.dairyfreedining.coach_marks.CoachMarkKeys
+import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.model.Restaurant
 import com.kabishan.dairyfreedining.navigateTo
+import com.kabishan.dairyfreedining.preferences.DataStoreRepository
 import com.kabishan.dairyfreedining.search.SearchBar
 import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
 import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
 import com.kabishan.dairyfreedining.ui.composables.RestaurantTile
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
+import com.pseudoankit.coachmark.LocalCoachMarkScope
+import com.pseudoankit.coachmark.UnifyCoachmark
+import com.pseudoankit.coachmark.model.HighlightedViewConfig
+import com.pseudoankit.coachmark.model.OverlayClickEvent
+import com.pseudoankit.coachmark.model.ToolTipPlacement
+import com.pseudoankit.coachmark.overlay.DimOverlayEffect
+import com.pseudoankit.coachmark.scope.enableCoachMark
+import com.pseudoankit.coachmark.shape.Arrow
 import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.app_name
 import dairyfreedining.composeapp.generated.resources.landing_search_bar_placeholder
 import dairyfreedining.composeapp.generated.resources.no_restaurants_found
 import dairyfreedining.composeapp.generated.resources.submit_food_item_floating_action_button_accessibility_text
+import dairyfreedining.composeapp.generated.resources.submit_food_item_floating_action_coach_mark_text
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -67,41 +78,46 @@ fun LandingScreen(
             }
     }
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = stringResource(resource = Res.string.app_name),
-                navController = navController,
-                showBackIcon = false
-            )
-        },
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-        LandingScreenContent(
-            innerPadding,
-            viewModel.searchQuery.value,
-            viewModel::updateSearchQuery,
-            viewModel.landingState.value,
-            viewModel::getRestaurants,
-            { restaurantId: String, restaurantName: String ->
-                navigateTo(
-                    navController,
-                    DestinationScreen.Details.createRoute(restaurantId, restaurantName)
+    UnifyCoachmark(
+        overlayEffect = DimOverlayEffect(DairyFreeDiningTheme.color.scrim.copy(alpha = .5f)),
+        onOverlayClicked = {
+            coroutineScope.launch {
+                dataStoreRepository.setBooleanPreference(
+                    DataStoreRepository.SHOW_COACH_MARK_LANDING,
+                    false
+                )
+            }
+            OverlayClickEvent.DismissAll
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopBar(
+                    title = stringResource(resource = Res.string.app_name),
+                    navController = navController,
+                    showBackIcon = false
                 )
             },
-            {
-                navigateTo(navController, DestinationScreen.Submission.route)
-            },
-            showCoachMark,
-            {
-                coroutineScope.launch {
-                    dataStoreRepository.setBooleanPreference(
-                        DataStoreRepository.SHOW_COACH_MARK_LANDING,
-                        false
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
+            LandingScreenContent(
+                innerPadding,
+                viewModel.searchQuery.value,
+                viewModel::updateSearchQuery,
+                viewModel.landingState.value,
+                viewModel::getRestaurants,
+                { restaurantId: String, restaurantName: String ->
+                    navigateTo(
+                        navController,
+                        DestinationScreen.Details.createRoute(restaurantId, restaurantName)
                     )
-                }
-            }
-        )
+                },
+                {
+                    navigateTo(navController, DestinationScreen.Submission.route)
+                },
+                showCoachMark
+            )
+        }
     }
 }
 
@@ -114,8 +130,7 @@ private fun LandingScreenContent(
     getRestaurants: () -> Unit,
     navigateToDetails: (String, String) -> Unit,
     navigateToSubmission: () -> Unit,
-    showCoachMark: Boolean?,
-    setDoNotShowCoachMark: () -> Unit
+    showCoachMark: Boolean?
 ) {
     Column(
         modifier = Modifier
@@ -129,8 +144,7 @@ private fun LandingScreenContent(
                 landingState.restaurantList,
                 navigateToDetails,
                 navigateToSubmission,
-                showCoachMark,
-                setDoNotShowCoachMark
+                showCoachMark
             )
 
             LandingState.ShowLoading -> LoadingMessage()
@@ -146,15 +160,17 @@ private fun RestaurantsList(
     restaurants: List<Restaurant>,
     navigateToDetails: (String, String) -> Unit,
     navigateToSubmission: () -> Unit,
-    showCoachMark: Boolean?,
-    setShowCoachMark: () -> Unit
+    showCoachMark: Boolean?
 ) {
+    val localCoachMarkScope = LocalCoachMarkScope.current
+    val coroutineScope = rememberCoroutineScope()
+
     val restaurantList: MutableState<List<Restaurant>> = remember { mutableStateOf(restaurants) }
 
-    println("Landing Screen: $showCoachMark")
-
-    if (showCoachMark == true) {
-        setShowCoachMark()
+    coroutineScope.launch {
+        if (showCoachMark == true) {
+            localCoachMarkScope.show(CoachMarkKeys.LANDING_SCREEN_SUBMIT_BUTTON)
+        }
     }
 
     Box(
@@ -205,6 +221,21 @@ private fun RestaurantsList(
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
                 .size(64.dp)
+                .enableCoachMark(
+                    key = CoachMarkKeys.LANDING_SCREEN_SUBMIT_BUTTON,
+                    toolTipPlacement = ToolTipPlacement.Start,
+                    highlightedViewConfig = HighlightedViewConfig(
+                        shape = HighlightedViewConfig.Shape.Rect(12.dp),
+                        padding = PaddingValues(8.dp)
+                    ),
+                    tooltip = {
+                        CoachMarkToolTip(
+                            text = stringResource(Res.string.submit_food_item_floating_action_coach_mark_text),
+                            arrow = Arrow.End()
+                        )
+                    },
+                    coachMarkScope = localCoachMarkScope
+                )
         ) {
             Icon(
                 Icons.Default.Edit,
@@ -228,8 +259,7 @@ private fun LandingScreenContentPreview() {
             getRestaurants = {},
             navigateToDetails = { _: String, _: String -> },
             navigateToSubmission = {},
-            showCoachMark = false,
-            setDoNotShowCoachMark = {}
+            showCoachMark = false
         )
     }
 }

@@ -25,10 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.kabishan.dairyfreedining.DataStoreRepository
+import com.kabishan.dairyfreedining.coach_marks.CoachMarkKeys
+import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.filter.FilterSection
 import com.kabishan.dairyfreedining.filter.FilterTab
 import com.kabishan.dairyfreedining.model.RestaurantDetails
+import com.kabishan.dairyfreedining.preferences.DataStoreRepository
 import com.kabishan.dairyfreedining.search.SearchBar
 import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
 import com.kabishan.dairyfreedining.ui.composables.FoodListItem
@@ -36,7 +38,16 @@ import com.kabishan.dairyfreedining.ui.composables.LoadingMessage
 import com.kabishan.dairyfreedining.ui.composables.Subheader
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
+import com.pseudoankit.coachmark.LocalCoachMarkScope
+import com.pseudoankit.coachmark.UnifyCoachmark
+import com.pseudoankit.coachmark.model.HighlightedViewConfig
+import com.pseudoankit.coachmark.model.OverlayClickEvent
+import com.pseudoankit.coachmark.model.ToolTipPlacement
+import com.pseudoankit.coachmark.overlay.DimOverlayEffect
+import com.pseudoankit.coachmark.scope.enableCoachMark
+import com.pseudoankit.coachmark.shape.Arrow
 import dairyfreedining.composeapp.generated.resources.Res
+import dairyfreedining.composeapp.generated.resources.details_filter_coach_mark_text
 import dairyfreedining.composeapp.generated.resources.details_search_bar_placeholder
 import dairyfreedining.composeapp.generated.resources.details_subheading
 import dairyfreedining.composeapp.generated.resources.filter_categories
@@ -68,37 +79,42 @@ fun DetailsScreen(
             }
     }
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = restaurantName,
-                subTitle = stringResource(Res.string.details_subheading),
-                navController = navController
-            )
-        },
-        modifier = Modifier.fillMaxSize()
-    )
-    { innerPadding ->
-        DetailsScreenContent(
-            innerPadding,
-            viewModel.searchQuery.value,
-            viewModel::updateSearchQuery,
-            viewModel.detailsState.value,
-            { viewModel.getRestaurantDetails(restaurantId) },
-            viewModel.selectedCategoryList.value,
-            viewModel::updateSelectedCategoryList,
-            viewModel::clearSelectedCategoryList,
-            viewModel::resetSelectedCategoryList,
-            showCoachMark,
-            {
-                coroutineScope.launch {
-                    dataStoreRepository.setBooleanPreference(
-                        DataStoreRepository.SHOW_COACH_MARK_DETAILS,
-                        false
-                    )
-                }
+    UnifyCoachmark(
+        overlayEffect = DimOverlayEffect(DairyFreeDiningTheme.color.scrim.copy(alpha = .5f)),
+        onOverlayClicked = {
+            coroutineScope.launch {
+                dataStoreRepository.setBooleanPreference(
+                    DataStoreRepository.SHOW_COACH_MARK_DETAILS,
+                    false
+                )
             }
+            OverlayClickEvent.DismissAll
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopBar(
+                    title = restaurantName,
+                    subTitle = stringResource(Res.string.details_subheading),
+                    navController = navController
+                )
+            },
+            modifier = Modifier.fillMaxSize()
         )
+        { innerPadding ->
+            DetailsScreenContent(
+                innerPadding,
+                viewModel.searchQuery.value,
+                viewModel::updateSearchQuery,
+                viewModel.detailsState.value,
+                { viewModel.getRestaurantDetails(restaurantId) },
+                viewModel.selectedCategoryList.value,
+                viewModel::updateSelectedCategoryList,
+                viewModel::clearSelectedCategoryList,
+                viewModel::resetSelectedCategoryList,
+                showCoachMark
+            )
+        }
     }
 }
 
@@ -113,8 +129,7 @@ private fun DetailsScreenContent(
     updateSelectedCategoryList: (String) -> Unit,
     clearSelectedCategoryList: () -> Unit,
     resetSelectedCategoryList: () -> Unit,
-    showCoachMark: Boolean?,
-    setDoNotShowCoachMark: () -> Unit
+    showCoachMark: Boolean?
 ) {
     Column(
         modifier = Modifier
@@ -130,8 +145,7 @@ private fun DetailsScreenContent(
                 updateSelectedCategoryList,
                 clearSelectedCategoryList,
                 resetSelectedCategoryList,
-                showCoachMark,
-                setDoNotShowCoachMark
+                showCoachMark
             )
 
             DetailsState.ShowLoading -> LoadingMessage()
@@ -150,9 +164,11 @@ private fun DetailsScreen(
     updateSelectedCategoryList: (String) -> Unit,
     clearSelectedCategoryList: () -> Unit,
     resetSelectedCategoryList: () -> Unit,
-    showCoachMark: Boolean?,
-    setShowCoachMark: () -> Unit
+    showCoachMark: Boolean?
 ) {
+    val localCoachMarkScope = LocalCoachMarkScope.current
+    val coroutineScope = rememberCoroutineScope()
+
     val displayCategories: MutableState<Map<String, List<String>>> =
         remember { mutableStateOf(categories) }
 
@@ -162,10 +178,10 @@ private fun DetailsScreen(
 
     val isBottomSheetShown = remember { mutableStateOf(false) }
 
-    println("Details Screen: $showCoachMark")
-
-    if (showCoachMark == true) {
-        setShowCoachMark()
+    coroutineScope.launch {
+        if (showCoachMark == true) {
+            localCoachMarkScope.show(CoachMarkKeys.DETAILS_SCREEN_FILTER)
+        }
     }
 
     SearchBar(
@@ -176,7 +192,23 @@ private fun DetailsScreen(
 
     FilterTab(
         onClick = { isBottomSheetShown.value = true },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .enableCoachMark(
+                key = CoachMarkKeys.DETAILS_SCREEN_FILTER,
+                toolTipPlacement = ToolTipPlacement.Bottom,
+                highlightedViewConfig = HighlightedViewConfig(
+                    shape = HighlightedViewConfig.Shape.Rect(12.dp),
+                    padding = PaddingValues(8.dp)
+                ),
+                tooltip = {
+                    CoachMarkToolTip(
+                        text = stringResource(Res.string.details_filter_coach_mark_text),
+                        arrow = Arrow.Top()
+                    )
+                },
+                coachMarkScope = localCoachMarkScope
+            )
     )
 
     HorizontalDivider()
@@ -264,8 +296,7 @@ private fun DetailsScreenPreview() {
             updateSelectedCategoryList = {},
             clearSelectedCategoryList = {},
             resetSelectedCategoryList = {},
-            showCoachMark = false,
-            setDoNotShowCoachMark = {}
+            showCoachMark = false
         )
     }
 }

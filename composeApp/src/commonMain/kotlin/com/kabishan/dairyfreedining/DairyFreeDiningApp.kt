@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.kabishan.dairyfreedining.about.AboutScreen
 import com.kabishan.dairyfreedining.details.DetailsScreen
 import com.kabishan.dairyfreedining.landing.LandingScreen
+import com.kabishan.dairyfreedining.preferences.DataStoreRepository
+import com.kabishan.dairyfreedining.preferences.createDataStore
 import com.kabishan.dairyfreedining.submission.SubmissionScreen
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview

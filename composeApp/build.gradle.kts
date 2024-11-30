@@ -61,6 +61,7 @@ kotlin {
             implementation(libs.navigation.compose)
             api(libs.datastore)
             api(libs.datastore.preferences)
+            implementation(libs.coachmark)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -1,4 +1,4 @@
-package com.kabishan.dairyfreedining
+package com.kabishan.dairyfreedining.preferences
 
 import android.content.Context
 import androidx.datastore.core.DataStore
