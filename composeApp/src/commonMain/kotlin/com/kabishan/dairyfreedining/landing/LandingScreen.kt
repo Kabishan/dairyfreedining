@@ -18,13 +18,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.kabishan.dairyfreedining.DataStoreRepository
 import com.kabishan.dairyfreedining.DestinationScreen
 import com.kabishan.dairyfreedining.model.Restaurant
 import com.kabishan.dairyfreedining.navigateTo
@@ -39,11 +43,13 @@ import dairyfreedining.composeapp.generated.resources.app_name
 import dairyfreedining.composeapp.generated.resources.landing_search_bar_placeholder
 import dairyfreedining.composeapp.generated.resources.no_restaurants_found
 import dairyfreedining.composeapp.generated.resources.submit_food_item_floating_action_button_accessibility_text
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LandingScreen(
+    dataStoreRepository: DataStoreRepository,
     navController: NavController,
     viewModel: LandingViewModel = viewModel(
         factory = LandingViewModelFactory(
@@ -51,6 +57,16 @@ fun LandingScreen(
         )
     )
 ) {
+    var showCoachMark: Boolean? by remember { mutableStateOf(null) }
+    val coroutineScope = rememberCoroutineScope()
+
+    coroutineScope.launch {
+        dataStoreRepository.getBooleanPreference(DataStoreRepository.SHOW_COACH_MARK_LANDING)
+            .collect {
+                showCoachMark = it
+            }
+    }
+
     Scaffold(
         topBar = {
             TopBar(
@@ -75,6 +91,15 @@ fun LandingScreen(
             },
             {
                 navigateTo(navController, DestinationScreen.Submission.route)
+            },
+            showCoachMark,
+            {
+                coroutineScope.launch {
+                    dataStoreRepository.setBooleanPreference(
+                        DataStoreRepository.SHOW_COACH_MARK_LANDING,
+                        false
+                    )
+                }
             }
         )
     }
@@ -88,7 +113,9 @@ private fun LandingScreenContent(
     landingState: LandingState,
     getRestaurants: () -> Unit,
     navigateToDetails: (String, String) -> Unit,
-    navigateToSubmission: () -> Unit
+    navigateToSubmission: () -> Unit,
+    showCoachMark: Boolean?,
+    setDoNotShowCoachMark: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -101,7 +128,9 @@ private fun LandingScreenContent(
                 updateSearchQuery,
                 landingState.restaurantList,
                 navigateToDetails,
-                navigateToSubmission
+                navigateToSubmission,
+                showCoachMark,
+                setDoNotShowCoachMark
             )
 
             LandingState.ShowLoading -> LoadingMessage()
@@ -117,8 +146,16 @@ private fun RestaurantsList(
     restaurants: List<Restaurant>,
     navigateToDetails: (String, String) -> Unit,
     navigateToSubmission: () -> Unit,
+    showCoachMark: Boolean?,
+    setShowCoachMark: () -> Unit
 ) {
     val restaurantList: MutableState<List<Restaurant>> = remember { mutableStateOf(restaurants) }
+
+    println("Landing Screen: $showCoachMark")
+
+    if (showCoachMark == true) {
+        setShowCoachMark()
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -190,7 +227,9 @@ private fun LandingScreenContentPreview() {
             ),
             getRestaurants = {},
             navigateToDetails = { _: String, _: String -> },
-            navigateToSubmission = {}
+            navigateToSubmission = {},
+            showCoachMark = false,
+            setDoNotShowCoachMark = {}
         )
     }
 }

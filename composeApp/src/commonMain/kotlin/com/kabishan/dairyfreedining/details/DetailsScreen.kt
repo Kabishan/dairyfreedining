@@ -15,13 +15,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.kabishan.dairyfreedining.DataStoreRepository
 import com.kabishan.dairyfreedining.filter.FilterSection
 import com.kabishan.dairyfreedining.filter.FilterTab
 import com.kabishan.dairyfreedining.model.RestaurantDetails
@@ -37,6 +41,7 @@ import dairyfreedining.composeapp.generated.resources.details_search_bar_placeho
 import dairyfreedining.composeapp.generated.resources.details_subheading
 import dairyfreedining.composeapp.generated.resources.filter_categories
 import dairyfreedining.composeapp.generated.resources.no_food_items_found
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -44,6 +49,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun DetailsScreen(
     restaurantId: String,
     restaurantName: String,
+    dataStoreRepository: DataStoreRepository,
     navController: NavController,
     viewModel: DetailsViewModel = viewModel(
         factory = DetailsViewModelFactory(
@@ -52,6 +58,16 @@ fun DetailsScreen(
         )
     )
 ) {
+    var showCoachMark: Boolean? by remember { mutableStateOf(null) }
+    val coroutineScope = rememberCoroutineScope()
+
+    coroutineScope.launch {
+        dataStoreRepository.getBooleanPreference(DataStoreRepository.SHOW_COACH_MARK_DETAILS)
+            .collect {
+                showCoachMark = it
+            }
+    }
+
     Scaffold(
         topBar = {
             TopBar(
@@ -72,7 +88,16 @@ fun DetailsScreen(
             viewModel.selectedCategoryList.value,
             viewModel::updateSelectedCategoryList,
             viewModel::clearSelectedCategoryList,
-            viewModel::resetSelectedCategoryList
+            viewModel::resetSelectedCategoryList,
+            showCoachMark,
+            {
+                coroutineScope.launch {
+                    dataStoreRepository.setBooleanPreference(
+                        DataStoreRepository.SHOW_COACH_MARK_DETAILS,
+                        false
+                    )
+                }
+            }
         )
     }
 }
@@ -87,7 +112,9 @@ private fun DetailsScreenContent(
     selectedCategoryList: List<String>,
     updateSelectedCategoryList: (String) -> Unit,
     clearSelectedCategoryList: () -> Unit,
-    resetSelectedCategoryList: () -> Unit
+    resetSelectedCategoryList: () -> Unit,
+    showCoachMark: Boolean?,
+    setDoNotShowCoachMark: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -102,7 +129,9 @@ private fun DetailsScreenContent(
                 selectedCategoryList,
                 updateSelectedCategoryList,
                 clearSelectedCategoryList,
-                resetSelectedCategoryList
+                resetSelectedCategoryList,
+                showCoachMark,
+                setDoNotShowCoachMark
             )
 
             DetailsState.ShowLoading -> LoadingMessage()
@@ -120,7 +149,9 @@ private fun DetailsScreen(
     selectedCategoryList: List<String>,
     updateSelectedCategoryList: (String) -> Unit,
     clearSelectedCategoryList: () -> Unit,
-    resetSelectedCategoryList: () -> Unit
+    resetSelectedCategoryList: () -> Unit,
+    showCoachMark: Boolean?,
+    setShowCoachMark: () -> Unit
 ) {
     val displayCategories: MutableState<Map<String, List<String>>> =
         remember { mutableStateOf(categories) }
@@ -130,6 +161,12 @@ private fun DetailsScreen(
     }
 
     val isBottomSheetShown = remember { mutableStateOf(false) }
+
+    println("Details Screen: $showCoachMark")
+
+    if (showCoachMark == true) {
+        setShowCoachMark()
+    }
 
     SearchBar(
         query = searchQuery,
@@ -226,7 +263,9 @@ private fun DetailsScreenPreview() {
             selectedCategoryList = listOf(),
             updateSelectedCategoryList = {},
             clearSelectedCategoryList = {},
-            resetSelectedCategoryList = {}
+            resetSelectedCategoryList = {},
+            showCoachMark = false,
+            setDoNotShowCoachMark = {}
         )
     }
 }
