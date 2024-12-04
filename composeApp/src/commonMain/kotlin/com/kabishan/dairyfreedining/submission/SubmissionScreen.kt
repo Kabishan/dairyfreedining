@@ -60,12 +60,8 @@ fun SubmissionScreen(
     ) { innerPadding ->
         SubmissionScreenContent(
             innerPadding = innerPadding,
-            snackbarHostState = snackbarHostState,
-            submissionState = viewModel.submissionState.value,
-            resetSubmissionState = viewModel::resetSubmissionState,
-            submissionTextFieldState = viewModel.submissionTextFieldState.value,
-            handleSubmissionTextFieldEvent = viewModel::handleSubmissionTextFieldEvent,
-            submitFood = viewModel::submitFood
+            submissionScreenStateHolder = viewModel.submissionScreenStateHolder,
+            snackbarHostState = snackbarHostState
         )
     }
 }
@@ -73,12 +69,8 @@ fun SubmissionScreen(
 @Composable
 private fun SubmissionScreenContent(
     innerPadding: PaddingValues,
-    snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    submissionState: SubmissionState,
-    resetSubmissionState: () -> Unit,
-    submissionTextFieldState: SubmissionTextFieldState,
-    handleSubmissionTextFieldEvent: (SubmissionTextFieldEvent) -> Unit,
-    submitFood: () -> Unit
+    submissionScreenStateHolder: SubmissionViewModel.SubmissionScreenStateHolder,
+    snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
     val focusManager = LocalFocusManager.current
     val showProgressBar = remember { mutableStateOf(false) }
@@ -89,6 +81,8 @@ private fun SubmissionScreenContent(
             .padding(innerPadding)
             .padding(horizontal = 8.dp)
     ) {
+        val submissionState = submissionScreenStateHolder.submissionState.value
+
         LaunchedEffect(submissionState) {
             when (submissionState) {
                 is SubmissionState.ShowError -> {
@@ -105,7 +99,7 @@ private fun SubmissionScreenContent(
                 SubmissionState.ShowLoading -> showProgressBar.value = true
                 SubmissionState.Initial -> showProgressBar.value = false
             }
-            resetSubmissionState()
+            submissionScreenStateHolder.resetSubmissionState()
         }
 
         if (showProgressBar.value) {
@@ -120,9 +114,9 @@ private fun SubmissionScreenContent(
                 modifier = Modifier.padding(top = 8.dp)
             )
             SubmissionTextField(
-                value = submissionTextFieldState.restaurant,
+                value = submissionScreenStateHolder.submissionTextFieldState.value.restaurant,
                 onValueChange = {
-                    handleSubmissionTextFieldEvent(
+                    submissionScreenStateHolder.handleSubmissionTextFieldEvent(
                         SubmissionTextFieldEvent.RestaurantTextChanged(it)
                     )
                 },
@@ -132,9 +126,9 @@ private fun SubmissionScreenContent(
                     .padding(vertical = 8.dp)
             )
             SubmissionTextField(
-                value = submissionTextFieldState.category,
+                value = submissionScreenStateHolder.submissionTextFieldState.value.category,
                 onValueChange = {
-                    handleSubmissionTextFieldEvent(
+                    submissionScreenStateHolder.handleSubmissionTextFieldEvent(
                         SubmissionTextFieldEvent.CategoryTextChanged(it)
                     )
                 },
@@ -144,9 +138,9 @@ private fun SubmissionScreenContent(
                     .padding(vertical = 8.dp)
             )
             SubmissionTextField(
-                value = submissionTextFieldState.food,
+                value = submissionScreenStateHolder.submissionTextFieldState.value.food,
                 onValueChange = {
-                    handleSubmissionTextFieldEvent(
+                    submissionScreenStateHolder.handleSubmissionTextFieldEvent(
                         SubmissionTextFieldEvent.FoodTextChanged(it)
                     )
                 },
@@ -156,7 +150,7 @@ private fun SubmissionScreenContent(
                     .padding(vertical = 8.dp)
             )
             Button(
-                onClick = { submitFood() },
+                onClick = { submissionScreenStateHolder.submitFood() },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(
@@ -191,13 +185,17 @@ private fun SubmissionScreenContentPreview() {
     DairyFreeDiningTheme {
         SubmissionScreenContent(
             innerPadding = PaddingValues(0.dp),
-            submissionState = SubmissionState.Initial,
-            resetSubmissionState = {},
-            submissionTextFieldState = SubmissionTextFieldState(
-                "McDonald's", "Burger", "Hamburger"
-            ),
-            handleSubmissionTextFieldEvent = {},
-            submitFood = {}
+            submissionScreenStateHolder = SubmissionViewModel.SubmissionScreenStateHolder(
+                submissionState = mutableStateOf(SubmissionState.Initial),
+                resetSubmissionState = {},
+                submissionTextFieldState = mutableStateOf(
+                    SubmissionTextFieldState(
+                        "McDonald's", "Burger", "Hamburger"
+                    )
+                ),
+                handleSubmissionTextFieldEvent = {},
+                submitFood = {}
+            )
         )
     }
 }

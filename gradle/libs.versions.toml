@@ -5,20 +5,25 @@ android-minSdk = "28"
 android-targetSdk = "34"
 androidx-activityCompose = "1.9.3"
 androidx-lifecycle = "2.8.4"
+coachmark = "3.0.1"
 compose-plugin = "1.7.1"
 kamelImage = "0.6.0"
 kotlin = "2.0.0"
 kotlinxSerializationJson = "1.7.1"
 ktorClientCore = "2.3.12"
 navigationCompose = "2.7.0-alpha07"
+datastore = "1.1.1"
 
 [libraries]
+coachmark = { module = "io.github.pseudoankit:coachmark", version.ref = "coachmark" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamelImage" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientCore" }
