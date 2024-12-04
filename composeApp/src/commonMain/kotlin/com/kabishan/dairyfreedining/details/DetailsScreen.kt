@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.kabishan.dairyfreedining.coach_marks.Arrow
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkKeys
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.filter.FilterSection
@@ -44,7 +45,6 @@ import com.pseudoankit.coachmark.model.HighlightedViewConfig
 import com.pseudoankit.coachmark.model.OverlayClickEvent
 import com.pseudoankit.coachmark.model.ToolTipPlacement
 import com.pseudoankit.coachmark.scope.enableCoachMark
-import com.pseudoankit.coachmark.shape.Arrow
 import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.details_filter_coach_mark_text
 import dairyfreedining.composeapp.generated.resources.details_search_bar_placeholder

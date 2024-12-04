@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.DestinationScreen
+import com.kabishan.dairyfreedining.coach_marks.Arrow
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkKeys
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.model.Restaurant
@@ -46,7 +47,6 @@ import com.pseudoankit.coachmark.model.HighlightedViewConfig
 import com.pseudoankit.coachmark.model.OverlayClickEvent
 import com.pseudoankit.coachmark.model.ToolTipPlacement
 import com.pseudoankit.coachmark.scope.enableCoachMark
-import com.pseudoankit.coachmark.shape.Arrow
 import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.app_name
 import dairyfreedining.composeapp.generated.resources.landing_search_bar_placeholder
@@ -222,7 +222,9 @@ private fun RestaurantsList(
                     ),
                     tooltip = {
                         CoachMarkToolTip(
-                            text = stringResource(Res.string.submit_food_item_floating_action_coach_mark_text),
+                            text = stringResource(
+                                Res.string.submit_food_item_floating_action_coach_mark_text
+                            ),
                             arrow = Arrow.End()
                         )
                     },
@@ -231,7 +233,9 @@ private fun RestaurantsList(
         ) {
             Icon(
                 Icons.Default.Edit,
-                contentDescription = stringResource(Res.string.submit_food_item_floating_action_button_accessibility_text)
+                contentDescription = stringResource(
+                    Res.string.submit_food_item_floating_action_button_accessibility_text
+                )
             )
         }
     }
