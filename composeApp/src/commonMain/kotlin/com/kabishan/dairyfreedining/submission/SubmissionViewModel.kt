@@ -2,8 +2,11 @@ package com.kabishan.dairyfreedining.submission
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kabishan.dairyfreedining.analytics.Analytics
 import com.kabishan.dairyfreedining.network.Status
 import dairyfreedining.composeapp.generated.resources.Res
 import dairyfreedining.composeapp.generated.resources.submission_screen_error_empty_fields
@@ -12,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class SubmissionViewModel(
     private val repository: SubmissionRepository
-) : ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
 
     private val submissionState: MutableState<SubmissionState> =
         mutableStateOf(SubmissionState.Initial)
@@ -27,6 +30,11 @@ class SubmissionViewModel(
         ::resetSubmissionState,
         ::submitFood
     )
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        Analytics.trackScreen(Analytics.SUBMISSION_SCREEN)
+    }
 
     fun handleSubmissionTextFieldEvent(event: SubmissionTextFieldEvent) {
         when (event) {
@@ -65,15 +73,20 @@ class SubmissionViewModel(
 
                     submissionState.value = when (result.status) {
                         Status.SUCCESS -> {
+                            Analytics.trackSubmission(Analytics.SUBMISSION_SUCCESS)
                             resetSubmissionTextFieldState()
                             SubmissionState.ShowSuccess
                         }
 
                         Status.FAILURE -> {
+                            Analytics.trackSubmission(
+                                "${Analytics.SUBMISSION_FAILURE} - ${result.code}"
+                            )
                             SubmissionState.ShowError(Res.string.submission_screen_error_network)
                         }
                     }
                 } else {
+                    Analytics.trackSubmission(Analytics.SUBMISSION_EMPTY_FIELDS)
                     submissionState.value =
                         SubmissionState.ShowError(Res.string.submission_screen_error_empty_fields)
                 }

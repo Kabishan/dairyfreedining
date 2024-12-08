@@ -13,7 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.kabishan.dairyfreedining.observeLifecycleEvents
 import com.kabishan.dairyfreedining.ui.composables.Subheader
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
@@ -32,7 +35,14 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun AboutScreen(navController: NavController) {
+fun AboutScreen(
+    navController: NavController,
+    viewModel: AboutViewModel = viewModel(
+        factory = AboutViewModelFactory()
+    )
+) {
+    viewModel.observeLifecycleEvents(LocalLifecycleOwner.current.lifecycle)
+
     Scaffold(
         topBar = {
             TopBar(

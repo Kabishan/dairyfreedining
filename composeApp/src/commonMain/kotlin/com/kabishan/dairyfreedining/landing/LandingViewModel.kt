@@ -2,12 +2,17 @@ package com.kabishan.dairyfreedining.landing
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kabishan.dairyfreedining.analytics.Analytics
 import com.kabishan.dairyfreedining.network.Status
 import kotlinx.coroutines.launch
 
-class LandingViewModel(private val repository: LandingRepository) : ViewModel() {
+class LandingViewModel(
+    private val repository: LandingRepository
+) : ViewModel(), DefaultLifecycleObserver {
 
     private val landingState: MutableState<LandingState> = mutableStateOf(LandingState.ShowLoading)
 
@@ -19,6 +24,11 @@ class LandingViewModel(private val repository: LandingRepository) : ViewModel() 
         ::getRestaurants,
         ::updateSearchQuery
     )
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        Analytics.trackScreen(Analytics.LANDING_SCREEN)
+    }
 
     init {
         getRestaurants()
@@ -33,7 +43,10 @@ class LandingViewModel(private val repository: LandingRepository) : ViewModel() 
                     LandingState.ShowSuccess(it)
                 } ?: LandingState.ShowSuccess(listOf())
 
-                Status.FAILURE -> LandingState.ShowError
+                Status.FAILURE -> {
+                    Analytics.trackScreenError(Analytics.LANDING_SCREEN)
+                    LandingState.ShowError
+                }
             }
         }
     }

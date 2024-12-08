@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.kabishan.dairyfreedining.observeLifecycleEvents
 import com.kabishan.dairyfreedining.ui.composables.TopBar
 import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 import dairyfreedining.composeapp.generated.resources.Res
@@ -47,6 +49,8 @@ fun SubmissionScreen(
         )
     )
 ) {
+    viewModel.observeLifecycleEvents(LocalLifecycleOwner.current.lifecycle)
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(

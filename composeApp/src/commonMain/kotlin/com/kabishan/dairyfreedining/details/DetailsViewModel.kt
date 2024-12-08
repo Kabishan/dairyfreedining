@@ -2,15 +2,19 @@ package com.kabishan.dairyfreedining.details
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kabishan.dairyfreedining.analytics.Analytics
 import com.kabishan.dairyfreedining.network.Status
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(
     restaurantId: String,
+    val restaurantName: String,
     val repository: DetailsRepository
-) : ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
 
     private val detailsState: MutableState<DetailsState> = mutableStateOf(DetailsState.ShowLoading)
 
@@ -33,6 +37,11 @@ class DetailsViewModel(
         getRestaurantDetails(restaurantId)
     }
 
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        Analytics.trackScreen("${Analytics.DETAILS_SCREEN} - $restaurantName")
+    }
+
     fun getRestaurantDetails(restaurantId: String) {
         viewModelScope.launch {
             val result = repository.getRestaurantDetails(restaurantId)
@@ -44,7 +53,10 @@ class DetailsViewModel(
                     DetailsState.ShowSuccess(details = it)
                 } ?: DetailsState.ShowError
 
-                Status.FAILURE -> DetailsState.ShowError
+                Status.FAILURE -> {
+                    Analytics.trackScreenError(Analytics.DETAILS_SCREEN)
+                    DetailsState.ShowError
+                }
             }
         }
     }

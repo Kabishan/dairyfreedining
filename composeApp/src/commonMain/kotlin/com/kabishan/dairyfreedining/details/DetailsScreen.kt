@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.coach_marks.Arrow
@@ -31,6 +32,7 @@ import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.filter.FilterSection
 import com.kabishan.dairyfreedining.filter.FilterTab
 import com.kabishan.dairyfreedining.model.RestaurantDetails
+import com.kabishan.dairyfreedining.observeLifecycleEvents
 import com.kabishan.dairyfreedining.preferences.DataStoreRepository
 import com.kabishan.dairyfreedining.search.SearchBar
 import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
@@ -64,10 +66,13 @@ fun DetailsScreen(
     viewModel: DetailsViewModel = viewModel(
         factory = DetailsViewModelFactory(
             restaurantId = restaurantId,
+            restaurantName = restaurantName,
             repository = DetailsRepository()
         )
     )
 ) {
+    viewModel.observeLifecycleEvents(LocalLifecycleOwner.current.lifecycle)
+
     var showCoachMark: Boolean? by remember { mutableStateOf(null) }
     val coroutineScope = rememberCoroutineScope()
 

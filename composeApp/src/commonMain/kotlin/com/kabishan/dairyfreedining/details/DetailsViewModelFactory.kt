@@ -7,9 +7,10 @@ import kotlin.reflect.KClass
 
 class DetailsViewModelFactory(
     private val restaurantId: String,
+    private val restaurantName: String,
     private val repository: DetailsRepository): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-        return DetailsViewModel(restaurantId, repository = repository) as T
+        return DetailsViewModel(restaurantId, restaurantName, repository = repository) as T
     }
 }

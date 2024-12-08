@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.DestinationScreen
@@ -34,6 +35,7 @@ import com.kabishan.dairyfreedining.coach_marks.CoachMarkKeys
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.model.Restaurant
 import com.kabishan.dairyfreedining.navigateTo
+import com.kabishan.dairyfreedining.observeLifecycleEvents
 import com.kabishan.dairyfreedining.preferences.DataStoreRepository
 import com.kabishan.dairyfreedining.search.SearchBar
 import com.kabishan.dairyfreedining.ui.composables.ErrorMessage
@@ -67,6 +69,8 @@ fun LandingScreen(
         )
     )
 ) {
+    viewModel.observeLifecycleEvents(LocalLifecycleOwner.current.lifecycle)
+
     var showCoachMark: Boolean? by remember { mutableStateOf(null) }
     val coroutineScope = rememberCoroutineScope()
 

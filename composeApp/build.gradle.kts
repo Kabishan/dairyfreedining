@@ -8,12 +8,12 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
+
     kotlin("plugin.serialization") version "2.0.0"
 
     id("com.codingfeline.buildkonfig") version "0.15.2"
-
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
 }
 
 kotlin {
@@ -40,9 +40,6 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
-            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.3.0"))
-            implementation(libs.firebase.crashlytics)
-            implementation(libs.firebase.analytics)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,9 +56,11 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.navigation.compose)
+            implementation(libs.coachmark)
             api(libs.datastore)
             api(libs.datastore.preferences)
-            implementation(libs.coachmark)
+            api(libs.gitlive.firebase.kotlin.analytics)
+            api(libs.gitlive.firebase.kotlin.crashlytics)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
