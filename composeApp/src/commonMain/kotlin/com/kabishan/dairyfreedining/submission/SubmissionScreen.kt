@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -77,6 +78,7 @@ private fun SubmissionScreenContent(
     snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val showProgressBar = remember { mutableStateOf(false) }
 
     Box(
@@ -154,7 +156,10 @@ private fun SubmissionScreenContent(
                     .padding(vertical = 8.dp)
             )
             Button(
-                onClick = { submissionScreenStateHolder.submitFood() },
+                onClick = {
+                    submissionScreenStateHolder.submitFood()
+                    keyboardController?.hide()
+                },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(
