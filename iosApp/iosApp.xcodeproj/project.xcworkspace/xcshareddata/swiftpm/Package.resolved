@@ -111,7 +111,7 @@
     {
       "identity" : "nsexceptionkt",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rickclephas/NSExceptionKt.git",
+      "location" : "https://github.com/rickclephas/NSExceptionKt",
       "state" : {
         "branch" : "master",
         "revision" : "3b667a9b9542053fc370953dbdb1535e46145afa"
