@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		4D15DB732D0D2D5B00E51492 /* NSExceptionKtBugsnag in Frameworks */ = {isa = PBXBuildFile; productRef = 4D15DB722D0D2D5B00E51492 /* NSExceptionKtBugsnag */; };
+		4D15DB752D0D2D5B00E51492 /* NSExceptionKtCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 4D15DB742D0D2D5B00E51492 /* NSExceptionKtCrashlytics */; };
 		4D19ED9F2CD6A85C00BCFFC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D19ED9D2CD6A7BF00BCFFC8 /* Assets.xcassets */; };
 		4D2EDD2B2D05003A0037A2E8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D2EDD2A2D05003A0037A2E8 /* GoogleService-Info.plist */; };
 		4D2EDD2E2D0501500037A2E8 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 4D2EDD2D2D0501500037A2E8 /* FirebaseAnalytics */; };
@@ -31,7 +33,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D15DB752D0D2D5B00E51492 /* NSExceptionKtCrashlytics in Frameworks */,
 				4D2EDD2E2D0501500037A2E8 /* FirebaseAnalytics in Frameworks */,
+				4D15DB732D0D2D5B00E51492 /* NSExceptionKtBugsnag in Frameworks */,
 				4D2EDD3E2D0501500037A2E8 /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,6 +118,8 @@
 			packageProductDependencies = (
 				4D2EDD2D2D0501500037A2E8 /* FirebaseAnalytics */,
 				4D2EDD3D2D0501500037A2E8 /* FirebaseCrashlytics */,
+				4D15DB722D0D2D5B00E51492 /* NSExceptionKtBugsnag */,
+				4D15DB742D0D2D5B00E51492 /* NSExceptionKtCrashlytics */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* DairyFreeDining.app */;
@@ -146,6 +152,7 @@
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
 				4D2EDD2C2D0501500037A2E8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				4D15DB712D0D2D5B00E51492 /* XCRemoteSwiftPackageReference "NSExceptionKt" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -428,6 +435,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4D15DB712D0D2D5B00E51492 /* XCRemoteSwiftPackageReference "NSExceptionKt" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rickclephas/NSExceptionKt";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		4D2EDD2C2D0501500037A2E8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -439,6 +454,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4D15DB722D0D2D5B00E51492 /* NSExceptionKtBugsnag */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D15DB712D0D2D5B00E51492 /* XCRemoteSwiftPackageReference "NSExceptionKt" */;
+			productName = NSExceptionKtBugsnag;
+		};
+		4D15DB742D0D2D5B00E51492 /* NSExceptionKtCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D15DB712D0D2D5B00E51492 /* XCRemoteSwiftPackageReference "NSExceptionKt" */;
+			productName = NSExceptionKtCrashlytics;
+		};
 		4D2EDD2D2D0501500037A2E8 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4D2EDD2C2D0501500037A2E8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "bugsnag-cocoa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bugsnag/bugsnag-cocoa.git",
+      "state" : {
+        "revision" : "d8b64989126d24ae4f39a50d3ceb749b3c446851",
+        "version" : "6.30.2"
+      }
+    },
+    {
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
@@ -97,6 +106,15 @@
       "state" : {
         "revision" : "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
         "version" : "2.30910.0"
+      }
+    },
+    {
+      "identity" : "nsexceptionkt",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rickclephas/NSExceptionKt.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "3b667a9b9542053fc370953dbdb1535e46145afa"
       }
     },
     {

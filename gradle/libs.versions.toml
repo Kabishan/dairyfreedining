@@ -1,5 +1,5 @@
 [versions]
-agp = "8.3.2"
+agp = "8.6.1"
 android-compileSdk = "34"
 android-minSdk = "28"
 android-targetSdk = "34"
@@ -8,7 +8,7 @@ androidx-lifecycle = "2.8.4"
 coachmark = "3.0.1"
 compose-plugin = "1.7.1"
 kamelImage = "0.6.0"
-kotlin = "2.0.0"
+kotlin = "2.1.0"
 kotlinxSerializationJson = "1.7.1"
 ktorClientCore = "2.3.12"
 navigationCompose = "2.7.0-alpha07"
@@ -16,6 +16,7 @@ datastore = "1.1.1"
 firebase-gitlive-sdk = "2.1.0"
 gradlePlugins-google-services = "4.4.2"
 gradlePlugins-crashlytics = "3.0.2"
+nsexceptionKtCore = "1.0.0-BETA-9"
 
 [libraries]
 coachmark = { module = "io.github.pseudoankit:coachmark", version.ref = "coachmark" }
@@ -35,6 +36,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorCli
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktorClientCore" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorClientCore" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+nsexception-kt-core = { module = "com.rickclephas.kmp:nsexception-kt-core", version.ref = "nsexceptionKtCore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

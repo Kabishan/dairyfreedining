@@ -32,6 +32,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            export(libs.nsexception.kt.core)
         }
     }
 
@@ -64,6 +65,7 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            api(libs.nsexception.kt.core)
         }
     }
 }
