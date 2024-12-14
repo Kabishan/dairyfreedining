@@ -14,3 +14,6 @@
 
 # GMS Measurement Play Services crash on Proguard Release builds
 -keep class com.google.android.gms.measurement.internal.** { *; }
+
+# Kamel
+-keep class io.kamel.** { *; }
