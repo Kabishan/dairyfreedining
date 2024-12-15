@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.coach_marks.Arrow
+import com.kabishan.dairyfreedining.coach_marks.CoachMarkDefaults
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkKeys
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.filter.FilterSection
@@ -53,6 +54,7 @@ import dairyfreedining.composeapp.generated.resources.details_search_bar_placeho
 import dairyfreedining.composeapp.generated.resources.details_subheading
 import dairyfreedining.composeapp.generated.resources.filter_categories
 import dairyfreedining.composeapp.generated.resources.no_food_items_found
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -173,6 +175,7 @@ private fun DetailsScreen(
 
     coroutineScope.launch {
         if (showCoachMark == true) {
+            delay(CoachMarkDefaults.DELAY_TO_SHOW_COACH_MARK_IN_SECONDS)
             localCoachMarkScope.show(CoachMarkKeys.DETAILS_SCREEN_FILTER)
         }
     }

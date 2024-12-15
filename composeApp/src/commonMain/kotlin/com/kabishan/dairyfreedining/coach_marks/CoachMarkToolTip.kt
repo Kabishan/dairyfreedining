@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkUtils.toPx
+import com.kabishan.dairyfreedining.ui.theme.DairyFreeDiningTheme
 
 @Composable
 fun CoachMarkToolTip(
@@ -26,22 +27,20 @@ fun CoachMarkToolTip(
     cornerRadius: Dp = CoachMarkDefaults.cornerRadius,
     padding: PaddingValues = CoachMarkDefaults.padding,
     shadowElevation: Dp = CoachMarkDefaults.shadowElevation,
-    bgColor: Color = CoachMarkDefaults.bgColor
+    bgColor: Color = DairyFreeDiningTheme.color.primaryContainer
 ) {
     val density = LocalDensity.current
 
     Box(
         modifier = Modifier
             .clip(coachMarkShape(arrow, density, cornerRadius))
-            .graphicsLayer {
-                this.shadowElevation = shadowElevation.toPx(density)
-            }
+            .graphicsLayer { this.shadowElevation = shadowElevation.toPx(density) }
             .background(bgColor)
             .padding(
-                start = arrow.startPadding,
-                end = arrow.endPadding,
-                top = arrow.topPadding,
-                bottom = arrow.bottomPadding
+                start = arrow.padding.start,
+                end = arrow.padding.end,
+                top = arrow.padding.top,
+                bottom = arrow.padding.bottom
             )
             .padding(padding)
             .then(modifier)
@@ -58,11 +57,10 @@ private fun coachMarkShape(
     return GenericShape { size, _ ->
         addRoundRect(
             RoundRect(
-                left = arrow.startPadding.toPx(density),
-                right = size.width - arrow.endPadding.toPx(density),
-                top = arrow.topPadding.toPx(density),
-                bottom = size.height - arrow.bottomPadding
-                    .toPx(density),
+                left = arrow.padding.start.toPx(density),
+                right = size.width - arrow.padding.end.toPx(density),
+                top = arrow.padding.top.toPx(density),
+                bottom = size.height - arrow.padding.bottom.toPx(density),
                 cornerRadius = CornerRadius(radius.toPx(density))
             )
         )

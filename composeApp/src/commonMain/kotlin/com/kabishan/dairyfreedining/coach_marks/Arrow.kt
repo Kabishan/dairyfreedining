@@ -13,24 +13,16 @@ sealed interface Arrow {
     val width: Dp
     val height: Dp
     val bias: Float
-    val startPadding: Dp
-    val endPadding: Dp
-    val topPadding: Dp
-    val bottomPadding: Dp
+    val padding: CoachMarkPadding
 
     fun draw(size: Size, density: Density): Path
 
     data class Top(
         override val width: Dp = CoachMarkDefaults.Arrow.width,
         override val height: Dp = CoachMarkDefaults.Arrow.height,
-        override val bias: Float = CoachMarkDefaults.Arrow.bias
+        override val bias: Float = CoachMarkDefaults.Arrow.bias,
+        override val padding: CoachMarkPadding = CoachMarkPadding(0.dp, height, 0.dp, 0.dp)
     ) : Arrow {
-
-        override val topPadding: Dp = height
-        override val startPadding: Dp = 0.dp
-        override val endPadding: Dp = 0.dp
-        override val bottomPadding: Dp = 0.dp
-
         override fun draw(size: Size, density: Density): Path = buildPath {
             val widthPx = width.toPx(density)
             val heightPx = height.toPx(density)
@@ -44,14 +36,9 @@ sealed interface Arrow {
     data class End(
         override val width: Dp = CoachMarkDefaults.Arrow.width,
         override val height: Dp = CoachMarkDefaults.Arrow.height,
-        override val bias: Float = CoachMarkDefaults.Arrow.bias
+        override val bias: Float = CoachMarkDefaults.Arrow.bias,
+        override val padding: CoachMarkPadding = CoachMarkPadding(0.dp, 0.dp, width, 0.dp)
     ) : Arrow {
-
-        override val endPadding: Dp = width
-        override val topPadding: Dp = 0.dp
-        override val startPadding: Dp = 0.dp
-        override val bottomPadding: Dp = 0.dp
-
         override fun draw(size: Size, density: Density): Path = buildPath {
             val widthPx = width.toPx(density)
             val heightPx = height.toPx(density)

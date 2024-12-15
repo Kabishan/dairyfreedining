@@ -1,12 +1,12 @@
 package com.kabishan.dairyfreedining.coach_marks
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object CoachMarkDefaults {
-    val bgColor: Color get() = Color(0xFFFFFFFF)
+    const val DELAY_TO_SHOW_COACH_MARK_IN_SECONDS = 500L
+
     val cornerRadius: Dp get() = 8.dp
     val shadowElevation: Dp get() = 2.dp
     val padding: PaddingValues get() = PaddingValues(horizontal = 8.dp, vertical = 6.dp)

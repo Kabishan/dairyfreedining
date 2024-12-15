@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.kabishan.dairyfreedining.DestinationScreen
 import com.kabishan.dairyfreedining.coach_marks.Arrow
+import com.kabishan.dairyfreedining.coach_marks.CoachMarkDefaults
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkKeys
 import com.kabishan.dairyfreedining.coach_marks.CoachMarkToolTip
 import com.kabishan.dairyfreedining.model.Restaurant
@@ -55,6 +56,7 @@ import dairyfreedining.composeapp.generated.resources.landing_search_bar_placeho
 import dairyfreedining.composeapp.generated.resources.no_restaurants_found
 import dairyfreedining.composeapp.generated.resources.submit_food_item_floating_action_button_accessibility_text
 import dairyfreedining.composeapp.generated.resources.submit_food_item_floating_action_coach_mark_text
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -165,6 +167,7 @@ private fun RestaurantsList(
 
     coroutineScope.launch {
         if (showCoachMark == true) {
+            delay(CoachMarkDefaults.DELAY_TO_SHOW_COACH_MARK_IN_SECONDS)
             localCoachMarkScope.show(CoachMarkKeys.LANDING_SCREEN_SUBMIT_BUTTON)
         }
     }
