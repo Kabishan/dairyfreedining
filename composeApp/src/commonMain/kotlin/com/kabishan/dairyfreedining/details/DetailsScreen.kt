@@ -137,7 +137,6 @@ private fun DetailsScreenContent(
                 detailsScreenStateHolder.selectedCategoryList.value,
                 detailsScreenStateHolder.updateSelectedCategoryList,
                 detailsScreenStateHolder.clearSelectedCategoryList,
-                detailsScreenStateHolder.resetSelectedCategoryList,
                 showCoachMark
             )
 
@@ -158,7 +157,6 @@ private fun DetailsScreen(
     selectedCategoryList: List<String>,
     updateSelectedCategoryList: (String) -> Unit,
     clearSelectedCategoryList: () -> Unit,
-    resetSelectedCategoryList: () -> Unit,
     showCoachMark: Boolean?
 ) {
     val localCoachMarkScope = LocalCoachMarkScope.current
@@ -168,7 +166,11 @@ private fun DetailsScreen(
         remember { mutableStateOf(categories) }
 
     val selectedCategories = categories.filterKeys { category ->
-        selectedCategoryList.contains(category)
+        if (selectedCategoryList.isNotEmpty()) {
+            selectedCategoryList.contains(category)
+        } else {
+            true
+        }
     }
 
     val isBottomSheetShown = remember { mutableStateOf(false) }
@@ -216,8 +218,7 @@ private fun DetailsScreen(
                 allItems = categories.keys.toList(),
                 selectedItems = selectedCategoryList,
                 onSelectionChanged = { category -> updateSelectedCategoryList(category) },
-                onSelectionCleared = clearSelectedCategoryList,
-                onSelectionReset = resetSelectedCategoryList
+                onSelectionCleared = clearSelectedCategoryList
             )
         }
     }
@@ -294,8 +295,7 @@ private fun DetailsScreenPreview() {
                 getRestaurantDetails = {},
                 selectedCategoryList = mutableStateOf(listOf()),
                 updateSelectedCategoryList = {},
-                clearSelectedCategoryList = {},
-                resetSelectedCategoryList = {}
+                clearSelectedCategoryList = {}
             ),
             showCoachMark = false
         )

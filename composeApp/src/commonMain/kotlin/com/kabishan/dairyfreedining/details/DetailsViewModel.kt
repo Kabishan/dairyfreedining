@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class DetailsViewModel(
     restaurantId: String,
-    val restaurantName: String,
+    private val restaurantName: String,
     val repository: DetailsRepository
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -29,8 +29,7 @@ class DetailsViewModel(
         ::getRestaurantDetails,
         ::updateSearchQuery,
         ::updateSelectedCategoryList,
-        ::clearSelectedCategoryList,
-        ::resetSelectedCategoryList
+        ::clearSelectedCategoryList
     )
 
     init {
@@ -49,7 +48,6 @@ class DetailsViewModel(
             detailsState.value = when (result.status) {
                 // Handle empty details
                 Status.SUCCESS -> result.data?.let {
-                    selectedCategoryList.value = it.categories.keys.toList()
                     DetailsState.ShowSuccess(details = it)
                 } ?: DetailsState.ShowError
 
@@ -81,13 +79,6 @@ class DetailsViewModel(
         selectedCategoryList.value = listOf()
     }
 
-    fun resetSelectedCategoryList() {
-        if (detailsState.value is DetailsState.ShowSuccess) {
-            selectedCategoryList.value =
-                (detailsState.value as DetailsState.ShowSuccess).details.categories.keys.toList()
-        }
-    }
-
     data class DetailsScreenStateHolder(
         val detailsState: MutableState<DetailsState>,
         val searchQuery: MutableState<String>,
@@ -95,7 +86,6 @@ class DetailsViewModel(
         val getRestaurantDetails: (String) -> Unit,
         val updateSearchQuery: (String) -> Unit,
         val updateSelectedCategoryList: (String) -> Unit,
-        val clearSelectedCategoryList: () -> Unit,
-        val resetSelectedCategoryList: () -> Unit,
+        val clearSelectedCategoryList: () -> Unit
     )
 }
