@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +28,7 @@ fun CoachMarkToolTip(
     cornerRadius: Dp = CoachMarkDefaults.cornerRadius,
     padding: PaddingValues = CoachMarkDefaults.padding,
     shadowElevation: Dp = CoachMarkDefaults.shadowElevation,
-    bgColor: Color = DairyFreeDiningTheme.color.primaryContainer
+    coachMarkColor: Color = DairyFreeDiningTheme.color.primaryContainer
 ) {
     val density = LocalDensity.current
 
@@ -35,7 +36,7 @@ fun CoachMarkToolTip(
         modifier = Modifier
             .clip(coachMarkShape(arrow, density, cornerRadius))
             .graphicsLayer { this.shadowElevation = shadowElevation.toPx(density) }
-            .background(bgColor)
+            .background(coachMarkColor)
             .padding(
                 start = arrow.padding.start,
                 end = arrow.padding.end,
@@ -45,7 +46,10 @@ fun CoachMarkToolTip(
             .padding(padding)
             .then(modifier)
     ) {
-        Text(text = text)
+        Text(
+            text = text,
+            color = contentColorFor(coachMarkColor)
+        )
     }
 }
 
