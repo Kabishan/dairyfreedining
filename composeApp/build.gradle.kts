@@ -91,8 +91,8 @@ android {
         applicationId = "com.kabishan.dairyfreedining"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 4
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "1.1"
     }
     packaging {
         resources {
