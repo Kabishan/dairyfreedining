@@ -39,8 +39,8 @@ class LandingViewModel(
             val result = repository.getRestaurants()
 
             landingState.value = when (result.status) {
-                Status.SUCCESS -> result.data?.let {
-                    LandingState.ShowSuccess(it)
+                Status.SUCCESS -> result.data?.let { list ->
+                    LandingState.ShowSuccess(list.sortedBy { it.name })
                 } ?: LandingState.ShowSuccess(listOf())
 
                 Status.FAILURE -> {
