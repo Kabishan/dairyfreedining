@@ -91,8 +91,8 @@ android {
         applicationId = "com.kabishan.dairyfreedining"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 5
-        versionName = "1.1"
+        versionCode = 6
+        versionName = "1.2"
     }
     packaging {
         resources {
@@ -126,6 +126,6 @@ buildkonfig {
     packageName = "com.kabishan.dairyfreedining"
 
     defaultConfigs {
-        buildConfigField(STRING, "BASE_URL", "https://dairyfreedining.koyeb.app/")
+        buildConfigField(STRING, "BASE_URL", "https://dairyfreedining-v1-5.onrender.com/")
     }
 }
